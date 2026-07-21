@@ -1,6 +1,3 @@
-import saman from "@/assets/images/saman.png";
-import zarinpal from "@/assets/images/zarinpal.png";
-
 export const CURRENCY = ["IRR"] as const;
 export const SENDING_METHODS = {
   storeSend: "ارسال توسط فروشگاه",
@@ -17,22 +14,7 @@ export const BRAND_DATA = {
   },
 } as const;
 
-export const PAYMENT_GATEWAYS = {
-  zarinpal: { label: "زرین پال", icon: zarinpal },
-  saman: { label: "بانک سامان", icon: saman },
-} as const;
-
-export type PaymentGatewayKeys = keyof typeof PAYMENT_GATEWAYS;
-
-export type PaymentGatewayValues =
-  (typeof PAYMENT_GATEWAYS)[PaymentGatewayKeys];
-
-export const PAYMENT_GATEWAYS_KEYS = Object.keys(
-  PAYMENT_GATEWAYS,
-) as PaymentGatewayKeys[];
-
-export const PAYMENT_GATEWAYS_VALUES = Object.values(
-  PAYMENT_GATEWAYS,
-) as PaymentGatewayValues[];
+export const GATEWAYS = ["zarinpal", "saman"] as const;
+export type PaymentGatewayKeys = (typeof GATEWAYS)[number];
 
 export const TERMS_CONDITIONS = `لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز ، و کاربردهای مدلورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز ، و کاربردهای مد  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز ، و کاربردهای مد  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است.  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز ، و کاربردهای مدلورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز ، و کاربردهای مد  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است`;

@@ -1,19 +1,37 @@
 import type { PaymentGatewayKeys } from "@/constant/appData";
 
+import { useCreateOrder } from "@/features/shipping/hooks/useCreateOrder";
+
 import {
   setIsRulesAccepted,
   setSelectedGateway,
   setShippingStoreState,
 } from "../../_store";
 
-// eslint-disable-next-line @eslint-react/no-unnecessary-use-prefix
 export const useInitToPay = () => {
+  const { handleCreateOrder } = useCreateOrder();
+
   const check = () => {
-    setShippingStoreState(({ isRulesAccepted, selectedGateway }) => ({
-      isDisabledNextAction: !(
-        Boolean(isRulesAccepted) && Boolean(selectedGateway)
-      ),
-    }));
+    setShippingStoreState(
+      ({ isRulesAccepted, selectedGateway, addressId, sendingMethod }) => {
+        const isDisabled = !(
+          Boolean(isRulesAccepted) && Boolean(selectedGateway)
+        );
+        return {
+          isDisabledNextAction: isDisabled,
+          nextButtonLabel: !isDisabled
+            ? "رفتن به صفحه پرداخت"
+            : "برخی موارد انتخاب نشده اند",
+          nextStepAction: () => {
+            handleCreateOrder({
+              addressId,
+              paymentGateway: selectedGateway,
+              sendingMethod,
+            });
+          },
+        };
+      },
+    );
   };
 
   const setPaymentGateway = (gateway: PaymentGatewayKeys) => {
