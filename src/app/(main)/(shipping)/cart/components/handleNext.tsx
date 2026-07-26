@@ -10,7 +10,7 @@ const HandleNext = () => {
   return (
     <SetShippingStoreOnMounted
       step={1}
-      isDisabledNextAction={false}
+      // isDisabledNextAction={false}
       nextStepAction={() => {
         router.push("/checkout");
       }}
