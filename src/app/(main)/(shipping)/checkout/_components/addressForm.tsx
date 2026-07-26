@@ -6,7 +6,7 @@ import { Controller } from "react-hook-form";
 
 import { useAddAddress } from "@/features/shipping/hooks/useAddAddress";
 
-import { setAddressId, setShippingStep } from "../../_store";
+import { useSetShippingState } from "../../_store";
 
 const NormalTextInput = ({
   label,
@@ -69,9 +69,12 @@ export interface AddressFormProps {
 }
 
 const AddressForm = ({ submitButtonRef }: AddressFormProps) => {
+  const setShippingState = useSetShippingState();
   const { control, onSubmit } = useAddAddress((id: string) => {
-    setAddressId(id);
-    setShippingStep(3);
+    setShippingState({
+      addressId: id,
+      step: 3,
+    });
   });
   return (
     <section className="border border-primary-500 bg-primary-25 py-4 px-8 rounded-4xl @container">

@@ -1,11 +1,11 @@
 "use client";
 
-import { use, useEffect } from "react";
+import { use, useEffect, useEffectEvent } from "react";
 
 import Skeleton from "@/components/ui/skeleton";
 
 import { useCheckoutContext } from "../_contexts";
-import { setIsAddAddress } from "../../_store";
+import { useSetShippingState } from "../../_store";
 import AddressCard from "./addressCard";
 
 export const AddressListSkeleton = () => {
@@ -25,10 +25,16 @@ export const AddressListSkeleton = () => {
 const AddressList = () => {
   const { address: addressPromise } = useCheckoutContext();
   const address = use(addressPromise);
-  useEffect(() => {
+  const setShippingState = useSetShippingState();
+  const handleChangeAddress = useEffectEvent(() => {
     if (address.length === 0) {
-      setIsAddAddress(true);
+      setShippingState({
+        isAddAddress: false,
+      });
     }
+  });
+  useEffect(() => {
+    handleChangeAddress();
   }, [address]);
   if (address.length === 0)
     return (

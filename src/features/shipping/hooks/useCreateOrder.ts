@@ -3,14 +3,35 @@ import { useTransition } from "react";
 import type { CreateOrder } from "@/services/shipping/type";
 
 import { createOrderAction } from "../actions/create";
+import { initiatePaymentAction } from "../actions/payment";
 
 export const useCreateOrder = () => {
   const [isPending, startTransition] = useTransition();
 
   const handleCreateOrder = (input: Partial<Omit<CreateOrder, "userId">>) => {
     startTransition(async () => {
-      const { success, message } = await createOrderAction(input);
-      console.log(success, message);
+      const orderResult = await createOrderAction(input);
+
+      if (!orderResult.success) {
+        console.error(orderResult.message);
+        return;
+      }
+
+      const orderId = orderResult.data;
+
+      if (!orderId) {
+        console.error("شناسه سفارش دریافت نشد");
+        return;
+      }
+
+      const paymentResult = await initiatePaymentAction(orderId);
+
+      if (!paymentResult.success || !paymentResult.data) {
+        console.error(paymentResult.message);
+        return;
+      }
+
+      window.location.href = paymentResult.data.url;
     });
   };
 

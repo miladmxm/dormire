@@ -4,12 +4,7 @@ import { useEffect, useEffectEvent } from "react";
 
 import type { ShippingState } from "../_store";
 
-import {
-  setShippingNextActionDisable,
-  setShippingNextButtonLabel,
-  setShippingNextStepAction,
-  setShippingStep,
-} from "../_store";
+import { useSetShippingState } from "../_store";
 
 const SetShippingStoreOnMounted = ({
   step,
@@ -17,13 +12,14 @@ const SetShippingStoreOnMounted = ({
   nextStepAction,
   nextButtonLabel,
 }: Partial<ShippingState>) => {
+  const setShippingState = useSetShippingState();
   const handleSetStep = useEffectEvent(() => {
-    if (step) setShippingStep(step);
+    if (step) setShippingState({ step });
     if (isDisabledNextAction !== undefined) {
-      setShippingNextActionDisable(isDisabledNextAction);
+      setShippingState({ isDisabledNextAction });
     }
-    if (nextStepAction) setShippingNextStepAction(nextStepAction);
-    if (nextButtonLabel) setShippingNextButtonLabel(nextButtonLabel);
+    if (nextStepAction) setShippingState({ nextStepAction });
+    if (nextButtonLabel) setShippingState({ nextButtonLabel });
   });
   useEffect(() => {
     handleSetStep();

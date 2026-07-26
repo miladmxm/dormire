@@ -4,13 +4,13 @@ import type { ComponentProps } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 
-import { useShippingStore } from "../../_store";
+import { useShippingContext } from "../../_store";
 import AddressForm from "./addressForm";
 
 const RenderAddAddress = ({
   submitButtonRef,
 }: ComponentProps<typeof AddressForm>) => {
-  const isAddAddress = useShippingStore((store) => store.isAddAddress);
+  const isAddAddress = useShippingContext((store) => store.isAddAddress);
   return (
     <AnimatePresence>
       {isAddAddress && (

@@ -33,6 +33,9 @@ const EnvSchema = v.object({
   S3_REGION: v.pipe(v.string(), v.nonEmpty()),
   S3_BUCKET: v.pipe(v.string(), v.nonEmpty()),
   S3_PORT: v.pipe(v.string(), v.nonEmpty()),
+
+  ZARINPAL_GATEWAY_ID: v.pipe(v.string(), v.nonEmpty()),
+  SAMAN_GATEWAY_ID: v.pipe(v.string(), v.nonEmpty()),
 });
 type Env = v.InferOutput<typeof EnvSchema>;
 

@@ -5,7 +5,7 @@ import type { CSSProperties } from "react";
 import SeparatorLine from "@/components/ui/separatorLine";
 import { cn } from "@/lib/utils";
 
-import { useShippingStore } from "../_store";
+import { useShippingContext } from "../_store";
 
 const NAVS = {
   cart: "لیست خرید",
@@ -44,7 +44,7 @@ const NavListItem = ({
 };
 
 const NavigationProgressContainer = () => {
-  const activeIndex = useShippingStore((store) => store.step);
+  const activeIndex = useShippingContext((store) => store.step);
   return (
     <ul
       style={

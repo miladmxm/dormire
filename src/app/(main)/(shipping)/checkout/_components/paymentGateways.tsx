@@ -5,7 +5,7 @@ import zarinpal from "@/assets/images/zarinpal.png";
 import Radio from "@/components/ui/radio";
 import { GATEWAYS } from "@/constant/appData";
 
-import { useShippingStore } from "../../_store";
+import { useShippingContext } from "../../_store";
 import { useInitToPay } from "../hooks/useInitToPay";
 
 export const PAYMENT_GATEWAYS = {
@@ -14,7 +14,7 @@ export const PAYMENT_GATEWAYS = {
 } as const;
 
 const PaymentGateways = () => {
-  const selectedGateway = useShippingStore((store) => store.selectedGateway);
+  const selectedGateway = useShippingContext((store) => store.selectedGateway);
   const { setPaymentGateway } = useInitToPay();
   return (
     <div className="flex gap-4 items-center">

@@ -1,9 +1,19 @@
+import type { PropsWithChildren } from "react";
+
+import { getUserOrders } from "@/features/shipping/dal/query";
+
 import InvoiceTotalSidebar from "./_components/invoiceTotalSidebar";
 import NavigationProgress from "./_components/navigationProgress";
+import ShipingContextProvider from "./_store";
+
+const ShippingInitialization = ({ children }: PropsWithChildren) => {
+  const orders = getUserOrders();
+  return <ShipingContextProvider>{children}</ShipingContextProvider>;
+};
 
 const ShippingLayout = ({ children }: LayoutProps<"/">) => {
   return (
-    <>
+    <ShippingInitialization>
       <NavigationProgress />
 
       <main className="container py-6">
@@ -12,7 +22,7 @@ const ShippingLayout = ({ children }: LayoutProps<"/">) => {
           <InvoiceTotalSidebar />
         </div>
       </main>
-    </>
+    </ShippingInitialization>
   );
 };
 

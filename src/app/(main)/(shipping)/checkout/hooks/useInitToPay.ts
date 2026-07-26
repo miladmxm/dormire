@@ -2,17 +2,14 @@ import type { PaymentGatewayKeys } from "@/constant/appData";
 
 import { useCreateOrder } from "@/features/shipping/hooks/useCreateOrder";
 
-import {
-  setIsRulesAccepted,
-  setSelectedGateway,
-  setShippingStoreState,
-} from "../../_store";
+import { useSetShippingState } from "../../_store";
 
 export const useInitToPay = () => {
   const { handleCreateOrder } = useCreateOrder();
+  const setShippingState = useSetShippingState();
 
   const check = () => {
-    setShippingStoreState(
+    setShippingState(
       ({ isRulesAccepted, selectedGateway, addressId, sendingMethod }) => {
         const isDisabled = !(
           Boolean(isRulesAccepted) && Boolean(selectedGateway)
@@ -35,12 +32,12 @@ export const useInitToPay = () => {
   };
 
   const setPaymentGateway = (gateway: PaymentGatewayKeys) => {
-    setSelectedGateway(gateway);
+    setShippingState({ selectedGateway: gateway });
     check();
   };
 
   const setRulesAccepted = (accepted: boolean) => {
-    setIsRulesAccepted(accepted);
+    setShippingState({ isRulesAccepted: accepted });
     check();
   };
 

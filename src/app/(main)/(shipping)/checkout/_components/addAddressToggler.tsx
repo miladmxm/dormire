@@ -6,25 +6,22 @@ import Plus from "@/assets/icons/plus.svg";
 
 import type { AddressFormProps } from "./addressForm";
 
-import {
-  setAddressId,
-  setIsAddAddress,
-  setShippingNextActionDisable,
-  setShippingNextStepAction,
-  useShippingStore,
-} from "../../_store";
+import { useSetShippingState, useShippingContext } from "../../_store";
 
 const AddAddressToggler = ({ submitButtonRef }: AddressFormProps) => {
-  const isAddAddress = useShippingStore((store) => store.isAddAddress);
+  const setShippingState = useSetShippingState();
+  const isAddAddress = useShippingContext((store) => store.isAddAddress);
 
   const handleToggle = () => {
     if (isAddAddress) {
-      setIsAddAddress(false);
+      setShippingState({ isAddAddress: false });
     } else {
-      setIsAddAddress(true);
-      setShippingNextActionDisable(false);
-      setShippingNextStepAction(() => submitButtonRef.current?.click());
-      setAddressId(undefined);
+      setShippingState({
+        isAddAddress: true,
+        isDisabledNextAction: false,
+        nextStepAction: () => submitButtonRef.current?.click(),
+        addressId: undefined,
+      });
     }
   };
 

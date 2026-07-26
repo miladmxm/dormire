@@ -6,13 +6,7 @@ import { BRAND_DATA, SENDING_METHODS } from "@/constant/appData";
 
 import { useCheckoutContext } from "../_contexts";
 import SetShippingStoreOnMounted from "../../_components/setShippingStoreOnMounted";
-import {
-  setSendignMethod,
-  setShippingNextActionDisable,
-  setShippingNextButtonLabel,
-  setShippingStep,
-  useShippingStore,
-} from "../../_store";
+import { useSetShippingState, useShippingContext } from "../../_store";
 
 const MethodSelectionRadio = ({
   label,
@@ -21,7 +15,8 @@ const MethodSelectionRadio = ({
   label: SendingMethodValue;
   value: SendingMethodKey;
 }) => {
-  const sendingMethod = useShippingStore((store) => store.sendingMethod);
+  const sendingMethod = useShippingContext((store) => store.sendingMethod);
+  const setShippingState = useSetShippingState();
   return (
     <div>
       <input
@@ -30,7 +25,7 @@ const MethodSelectionRadio = ({
         checked={sendingMethod === value}
         onChange={(e) => {
           if (e.target.checked) {
-            setSendignMethod(value);
+            setShippingState({ sendingMethod: value });
           }
         }}
         type="radio"
@@ -48,9 +43,9 @@ const MethodSelectionRadio = ({
 };
 
 const SendingMethodDescription = () => {
-  const sendingMethod = useShippingStore((store) => store.sendingMethod);
+  const sendingMethod = useShippingContext((store) => store.sendingMethod);
   const addressPromise = useCheckoutContext().address;
-  const addressId = useShippingStore((store) => store.addressId);
+  const addressId = useShippingContext((store) => store.addressId);
   const address = use(addressPromise);
   const selectedAddress = address.find((item) => item.id === addressId);
   if (!selectedAddress) return;
@@ -80,6 +75,7 @@ const SendingMethodDescription = () => {
 };
 
 const SendignMethod = () => {
+  const setShippingState = useSetShippingState();
   return (
     <section>
       <div className="rounded-4xl border border-primary-500 px-14 py-8 flex flex-col gap-6">
@@ -99,9 +95,11 @@ const SendignMethod = () => {
       </div>
       <SetShippingStoreOnMounted
         nextStepAction={() => {
-          setShippingStep(4);
-          setShippingNextActionDisable(true);
-          setShippingNextButtonLabel("رفتن به درگاه پرداخت");
+          setShippingState({
+            step: 4,
+            isDisabledNextAction: true,
+            nextButtonLabel: "رفتن به درگاه پرداخت",
+          });
         }}
       />
     </section>

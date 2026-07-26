@@ -3,14 +3,7 @@ import type { Address } from "@/services/shipping/type";
 import Radio from "@/components/ui/radio";
 import SeparatorLine from "@/components/ui/separatorLine";
 
-import {
-  setAddressId,
-  setIsAddAddress,
-  setShippingNextActionDisable,
-  setShippingNextStepAction,
-  setShippingStep,
-  useShippingStore,
-} from "../../_store";
+import { useSetShippingState, useShippingContext } from "../../_store";
 
 const AddressCard = ({
   province,
@@ -20,13 +13,16 @@ const AddressCard = ({
   fullname,
   id,
 }: Address) => {
-  const addressId = useShippingStore((store) => store.addressId);
+  const addressId = useShippingContext((store) => store.addressId);
+  const setShippingState = useSetShippingState();
 
   const handleSelectAddress = () => {
-    setAddressId(id);
-    setIsAddAddress(false);
-    setShippingNextActionDisable(false);
-    setShippingNextStepAction(() => setShippingStep(3));
+    setShippingState({
+      addressId: id,
+      isAddAddress: false,
+      isDisabledNextAction: false,
+      nextStepAction: () => setShippingState({ step: 3 }),
+    });
   };
 
   return (
