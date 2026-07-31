@@ -4,10 +4,12 @@ import type { PropsWithChildren } from "react";
 
 import { createContext, use, useMemo } from "react";
 
+import type { Cart } from "@/services/cart/type";
 import type { Address } from "@/services/shipping/type";
 
 interface CheckoutContextState {
   address: Promise<Address[]>;
+  cart: Promise<Cart | undefined>;
 }
 
 const CheckoutContext = createContext<CheckoutContextState | undefined>(
@@ -16,10 +18,10 @@ const CheckoutContext = createContext<CheckoutContextState | undefined>(
 CheckoutContext.displayName = "CheckoutContext";
 
 const CheckoutContextProvider = ({
-  address,
   children,
+  ...props
 }: PropsWithChildren<CheckoutContextState>) => {
-  const value = useMemo<CheckoutContextState>(() => ({ address }), [address]);
+  const value = useMemo<CheckoutContextState>(() => props, [props]);
   return <CheckoutContext value={value}>{children}</CheckoutContext>;
 };
 
