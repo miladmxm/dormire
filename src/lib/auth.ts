@@ -31,7 +31,7 @@ export const auth = betterAuth({
       },
       signUpOnVerification: {
         getTempEmail: (pn) => {
-          return `${pn}@yatak.com`;
+          return `${pn}@dormire.com`;
         },
 
         getTempName: () => {
