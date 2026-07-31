@@ -11,7 +11,7 @@ import type { CreateOrder } from "./type";
 import { discountCalculation } from "../product/utils";
 
 export const createOrder = async (data: CreateOrder) => {
-  const { addressId, sendingMethod, paymentGateway, userId } = data;
+  const { addressId, sendingMethod, userId } = data;
 
   const userCart =
     await cartRepo.findCartByUserIdWithProductAndMetadata(userId);
@@ -48,7 +48,7 @@ export const createOrder = async (data: CreateOrder) => {
         addressId,
         totalPrice,
         sendingMethod,
-        paymentGateway,
+        paymentGateway: data.paymentGateway,
       },
       tx,
     );
@@ -69,15 +69,14 @@ export const createOrder = async (data: CreateOrder) => {
   return orderId;
 };
 
-export const getOrderById = async (orderId: string, userId: string) => {
-  const order = await orderRepo.findOrderById(orderId);
-
-  if (!order || order.userId !== userId) {
-    return null;
-  }
+export const getUserOrder = async (orderId: string, userId: string) => {
+  const order = await orderRepo.findUserOrderById({ id: orderId, userId });
 
   return order;
 };
+
+export const getOrderForVerify = async (orderId: string) =>
+  orderRepo.findPayingOrderById(orderId);
 
 export const getUserOrders = async (userId: string) => {
   "use cache";

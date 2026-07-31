@@ -1,5 +1,7 @@
 import * as v from "valibot";
 
+import { GATEWAYS } from "@/constant/appData";
+
 export const AddAddressSchema = v.object({
   fullname: v.pipe(
     v.string(),
@@ -21,3 +23,8 @@ export const CreateOrderSchema = v.object({
 });
 
 export type CreateOrderOutput = v.InferOutput<typeof CreateOrderSchema>;
+
+export const VerifyCallbackParams = v.object({
+  orderId: v.pipe(v.string(), v.nonEmpty()),
+  gateway: v.pipe(v.string(), v.picklist(GATEWAYS)),
+});

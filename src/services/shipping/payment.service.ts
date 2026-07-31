@@ -1,11 +1,15 @@
 import { SepPayment, ZarinpalPayment } from "persian-gateways";
 
 import env from "@/config/env";
+import { withTransaction } from "@/repositories";
 import * as orderRepo from "@/repositories/order.repo";
+import * as paymentRepo from "@/repositories/payment.repo";
 
 import type { PaymentGateway } from "./type";
 
-const GATEWAY_BASE_URL = process.env.BASE_URL ?? "http://localhost:3000";
+import { getOrderForVerify } from "./order.service";
+
+const GATEWAY_BASE_URL = env.ORIGIN;
 
 const CALLBACK_URL = `${GATEWAY_BASE_URL}/api/payment/callback`;
 
@@ -14,7 +18,10 @@ const createPaymentInstance = (
   amount: number,
   orderId: string,
 ) => {
-  const config = { amount, callBackUrl: CALLBACK_URL, tracker: orderId };
+  const callback = new URL(CALLBACK_URL);
+  callback.searchParams.append("orderId", orderId);
+  callback.searchParams.append("gateway", gateway);
+  const config = { amount, callBackUrl: callback.href, tracker: orderId };
 
   switch (gateway) {
     case "zarinpal":
@@ -35,21 +42,28 @@ const createPaymentInstance = (
   }
 };
 
-export const createPaymentFromOrder = async (orderId: string) => {
-  const order = await orderRepo.findOrderById(orderId);
+export const createPaymentFromOrder = async ({
+  orderId,
+  userId,
+}: {
+  orderId: string;
+  userId: string;
+}) => {
+  const order = await orderRepo.findPendingUserOrderById({
+    id: orderId,
+    userId,
+  });
 
   if (!order) {
     return { success: false as const, message: "سفارش یافت نشد" };
   }
 
-  if (order.status !== "pending") {
-    return {
-      success: false as const,
-      message: "این سفارش قبلاً پردازش شده است",
-    };
+  const gateway = order.paymentGateway;
+
+  if (!gateway) {
+    return { success: false as const, message: "درگاه پرداخت انتخاب نشده است" };
   }
 
-  const gateway = order.paymentGateway as PaymentGateway;
   const payment = createPaymentInstance(gateway, order.totalPrice, orderId);
 
   const [error, result] = await payment.getPayPage();
@@ -61,18 +75,41 @@ export const createPaymentFromOrder = async (orderId: string) => {
     };
   }
 
+  await orderRepo.updateOrderStatus({ status: "paying", id: orderId });
   return { success: true as const, url: result.url };
+};
+
+const createVerifiedPayment = (data: {
+  userId: string;
+  orderId: string;
+  amount: number;
+  gateway: PaymentGateway;
+  transaction?: unknown;
+}) => {
+  return withTransaction(async (tx) => {
+    const [{ id }] = await paymentRepo.createPayment(data, tx);
+    await orderRepo.updateOrderStatus({ id: data.orderId, status: "paid" }, tx);
+    return id;
+  });
 };
 
 export const verifyPayment = async (params: {
   gateway: PaymentGateway;
-  amount: number;
   url: string;
+  orderId: string;
   body?: Record<string, unknown>;
 }) => {
-  const { gateway, amount, url, body } = params;
-  const payment = createPaymentInstance(gateway, amount, "temp");
+  const { gateway, url, body, orderId } = params;
+  const order = await getOrderForVerify(orderId);
 
+  if (!order) {
+    return { success: false as const, message: "این سفارش وجود ندارد" };
+  }
+  if (!order || order.paymentGateway !== gateway) {
+    return { success: false as const, message: "نام درگاه صحیح نیست" };
+  }
+
+  const payment = createPaymentInstance(gateway, order.totalPrice, orderId);
   const [error, result] = await payment.verify({ url, body });
 
   if (error || !result) {
@@ -82,5 +119,12 @@ export const verifyPayment = async (params: {
     };
   }
 
+  await createVerifiedPayment({
+    amount: order.totalPrice,
+    gateway,
+    orderId,
+    userId: order.userId,
+    transaction: { body, url },
+  });
   return { success: true as const, isOk: result.isOk };
 };

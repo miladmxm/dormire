@@ -13,10 +13,10 @@ const ShippingInitialization = async ({ children }: PropsWithChildren) => {
   const orders = await getUserOrders();
   const cartItems = await getUserCart();
 
-  console.log(orders);
+  console.log(orders, cartItems);
   return (
     <ShipingContextProvider
-      isDisabledNextAction={cartItems?.items.length === 0}
+    // isDisabledNextAction={cartItems?.items.length === 0}
     >
       {children}
     </ShipingContextProvider>
@@ -28,7 +28,6 @@ const ShippingLayout = ({ children }: LayoutProps<"/">) => {
     <Suspense>
       <ShippingInitialization>
         <NavigationProgress />
-
         <main className="container py-6">
           <div className="grid max-w-full lg:grid-cols-[2fr_1fr] xl:grid-cols-[3fr_1fr] gap-4">
             {children}

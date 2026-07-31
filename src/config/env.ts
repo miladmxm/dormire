@@ -9,6 +9,7 @@ const EnvSchema = v.object({
       "APP_MODE must be either 'development' or 'production'.",
     ),
   ),
+  ORIGIN: v.pipe(v.string(), v.nonEmpty(), v.url()),
   DB_URL: v.pipe(v.string(), v.nonEmpty()),
   // BETTER_AUTH_SECRET: v.pipe(v.string(), v.minLength(10), v.nonEmpty()),
   PORT: v.pipe(

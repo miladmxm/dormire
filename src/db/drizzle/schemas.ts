@@ -7,6 +7,7 @@ export * from "./schemas/comment";
 export * from "./schemas/main";
 export * from "./schemas/media";
 export * from "./schemas/order";
+export * from "./schemas/payment";
 export * from "./schemas/portfolio";
 export * from "./schemas/product";
 export * from "./schemas/productCategory";

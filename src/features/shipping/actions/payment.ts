@@ -15,13 +15,16 @@ export const initiatePaymentAction = async (
     return { success: false, message: "لطفا ابتدا وارد حساب خود شوید" };
   }
 
-  const order = await orderService.getOrderById(orderId, session.user.id);
+  const order = await orderService.getUserOrder(orderId, session.user.id);
 
   if (!order) {
     return { success: false, message: "سفارش یافت نشد" };
   }
 
-  const result = await createPaymentFromOrder(orderId);
+  const result = await createPaymentFromOrder({
+    orderId,
+    userId: session.user.id,
+  });
 
   if (!result.success) {
     return { success: false, message: result.message };

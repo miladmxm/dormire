@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 import type { OrderStatus } from "@/services/shipping/type";
 
@@ -19,9 +19,17 @@ export const createOrderItems = (
 ) =>
   getDBorTX(tx).insert(orderItem).values(data).returning({ id: orderItem.id });
 
-export const findOrderById = (id: string, tx?: Transaction) =>
+export const findPayingOrderById = (orderId: string, tx?: Transaction) =>
   getDBorTX(tx).query.order.findFirst({
-    where: eq(order.id, id),
+    where: and(eq(order.id, orderId), eq(order.status, "paying")),
+  });
+
+export const findUserOrderById = (
+  { id, userId }: { id: string; userId: string },
+  tx?: Transaction,
+) =>
+  getDBorTX(tx).query.order.findFirst({
+    where: and(eq(order.id, id), eq(order.userId, userId)),
     with: {
       address: true,
       items: {
@@ -43,7 +51,37 @@ export const findOrderById = (id: string, tx?: Transaction) =>
       },
     },
   });
-
+export const findPendingUserOrderById = (
+  { id, userId }: { id: string; userId: string },
+  tx?: Transaction,
+) =>
+  getDBorTX(tx).query.order.findFirst({
+    where: and(
+      eq(order.id, id),
+      eq(order.userId, userId),
+      eq(order.status, "pending"),
+    ),
+    with: {
+      address: true,
+      items: {
+        with: {
+          product: {
+            columns: { id: true, name: true, slug: true },
+            with: { thumbnail: true },
+          },
+          metadata: {
+            columns: {
+              id: true,
+              price: true,
+              stock: true,
+              discount: true,
+              optionItemIds: true,
+            },
+          },
+        },
+      },
+    },
+  });
 export const findOrdersByUserId = (userId: string, tx?: Transaction) =>
   getDBorTX(tx).query.order.findMany({
     where: eq(order.userId, userId),
@@ -70,12 +108,12 @@ export const updateOrderStatus = (
     .where(eq(order.id, id))
     .returning({ id: order.id });
 
-export const updateOrderPaymentRef = (
-  { id, paymentRef }: { id: string; paymentRef: string },
-  tx?: Transaction,
-) =>
-  getDBorTX(tx)
-    .update(order)
-    .set({ paymentRef })
-    .where(eq(order.id, id))
-    .returning({ id: order.id });
+// export const updateOrderPaymentRef = (
+//   { id, paymentRef }: { id: string; paymentRef: string },
+//   tx?: Transaction,
+// ) =>
+//   getDBorTX(tx)
+//     .update(order)
+//     .set({ paymentRef })
+//     .where(eq(order.id, id))
+//     .returning({ id: order.id });

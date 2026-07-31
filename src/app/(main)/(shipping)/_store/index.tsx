@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import type { StoreApi } from "zustand";
 
-import { createContext, use, useMemo } from "react";
+import { createContext, use, useState } from "react";
 import { createStore, useStore } from "zustand";
 
 import type { PaymentGatewayKeys, SendingMethodKey } from "@/constant/appData";
@@ -82,7 +82,7 @@ const ShipingContextProvider = ({
   children,
   ...props
 }: PropsWithChildren<Partial<ShippingState>>) => {
-  const store = useMemo(() => createShippingStore(props), [props]);
+  const [store] = useState(() => createShippingStore(props));
   return <ShipingContext value={store}>{children}</ShipingContext>;
 };
 

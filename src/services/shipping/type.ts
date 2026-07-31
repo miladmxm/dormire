@@ -19,12 +19,15 @@ export interface CreateAddress {
   userId: string;
 }
 
-export type OrderStatus =
-  | "cancelled"
-  | "delivered"
-  | "paid"
-  | "pending"
-  | "shipped";
+export const orderStatuses = [
+  "pending",
+  "paying",
+  "paid",
+  "delivered",
+  "cancelled",
+] as const;
+
+export type OrderStatus = (typeof orderStatuses)[number];
 
 export type SendingMethod = "personReception" | "storeSend";
 export type PaymentGateway = "saman" | "zarinpal";
