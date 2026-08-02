@@ -128,3 +128,6 @@ export const verifyPayment = async (params: {
   });
   return { success: true as const, isOk: result.isOk };
 };
+
+export const getSuccessOrderPayment = async (orderId: string) =>
+  paymentRepo.findPaymentByOrderId(orderId);

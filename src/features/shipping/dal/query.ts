@@ -5,6 +5,7 @@ import {
 } from "@/dal/helpers";
 import * as addressService from "@/services/shipping/address.service";
 import * as orderService from "@/services/shipping/order.service";
+import * as paymentService from "@/services/shipping/payment.service";
 
 import "server-only";
 
@@ -37,4 +38,9 @@ export const getUserOrder = async (orderId: string) =>
         ),
       { order: ["read"] },
     ),
+  );
+
+export const getOrderSuccessPayment = async (orderId: string) =>
+  dalVerifySuccess(
+    await dalDbOperation(() => paymentService.getSuccessOrderPayment(orderId)),
   );
