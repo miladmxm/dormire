@@ -69,7 +69,13 @@ export const createOrder = async (data: CreateOrder) => {
   return orderId;
 };
 
-export const getUserOrder = async (orderId: string, userId: string) => {
+export const getUserOrder = async ({
+  orderId,
+  userId,
+}: {
+  orderId: string;
+  userId: string;
+}) => {
   const order = await orderRepo.findUserOrderById({ id: orderId, userId });
 
   return order;

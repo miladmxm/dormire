@@ -5,6 +5,7 @@ import {
 } from "@/dal/helpers";
 import * as addressService from "@/services/shipping/address.service";
 import * as orderService from "@/services/shipping/order.service";
+
 import "server-only";
 
 export const getUserAddress = async () =>
@@ -24,5 +25,16 @@ export const getUserOrders = async () =>
       {
         order: ["read"],
       },
+    ),
+  );
+
+export const getUserOrder = async (orderId: string) =>
+  dalVerifySuccess(
+    await dalRequireAuth(
+      ({ id }) =>
+        dalDbOperation(() =>
+          orderService.getUserOrder({ orderId, userId: id }),
+        ),
+      { order: ["read"] },
     ),
   );
