@@ -14,7 +14,7 @@ import { CacheKeys } from "@/constant/cacheKeys";
 import { getSession } from "@/lib/auth";
 import { validator } from "@/validations";
 
-import * as dalAddressMutation from "../dal/mutation";
+import * as dalShippingMutation from "../dal/mutation";
 import { AddAddressSchema, CreateOrderSchema } from "../validations";
 
 export const createAddressAction = async (
@@ -35,7 +35,8 @@ export const createAddressAction = async (
   }
 
   try {
-    const createdAddressOutput = await dalAddressMutation.createAddress(output);
+    const createdAddressOutput =
+      await dalShippingMutation.createAddress(output);
 
     if (!createdAddressOutput.success) {
       return { success: false, message: "خطا در ایجاد آدرس" };
@@ -77,7 +78,7 @@ export const createOrderAction = async (
       paymentGateway: output.paymentGateway as PaymentGateway,
     };
 
-    const createdOrderOutput = await dalAddressMutation.createOrder(orderData);
+    const createdOrderOutput = await dalShippingMutation.createOrder(orderData);
 
     if (!createdOrderOutput.success) {
       return { success: false, message: "خطا در ایجاد سفارش" };

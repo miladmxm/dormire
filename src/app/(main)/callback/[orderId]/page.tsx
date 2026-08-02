@@ -1,15 +1,26 @@
 import { Suspense } from "react";
 
 import Button from "@/components/ui/button";
+import { getOrderSuccessPayment } from "@/features/shipping/dal/query";
 import { cn } from "@/lib/utils";
 
 const CallbackPage = async ({
   searchParams,
   params,
 }: PageProps<"/callback/[orderId]">) => {
-  const { message } = await searchParams;
+  let { message } = await searchParams;
+  let callbackSuccess: boolean = true;
   const { orderId } = await params;
-  const callbackSuccess = Boolean(orderId === "true");
+
+  if (orderId === "invalid") {
+    callbackSuccess = false;
+    message = "موارد بازگشتی از درگاه صحیح نیست";
+  }
+
+  if (callbackSuccess) {
+    const payment = await getOrderSuccessPayment(orderId);
+    callbackSuccess = Boolean(payment);
+  }
 
   return (
     <main className="container py-10">
@@ -27,6 +38,7 @@ const CallbackPage = async ({
         >
           {callbackSuccess ? "خرید موفقیت آمیز بود" : "خرید ناموفق بود"}
         </h1>
+        {message && <p>{message}</p>}
         {callbackSuccess ? (
           <Button variant="secondary" className="max-w-sm">
             حساب کاربری
