@@ -3,8 +3,9 @@
 import type { ActionResult } from "@/types/actions";
 
 import { getSession } from "@/lib/auth";
-import * as orderService from "@/services/shipping/order.service";
 import { createPaymentFromOrder } from "@/services/shipping/payment.service";
+
+import { getUserOrder } from "../dal/query";
 
 export const initiatePaymentAction = async (
   orderId: string,
@@ -15,7 +16,7 @@ export const initiatePaymentAction = async (
     return { success: false, message: "لطفا ابتدا وارد حساب خود شوید" };
   }
 
-  const order = await orderService.getUserOrder(orderId, session.user.id);
+  const order = await getUserOrder(orderId);
 
   if (!order) {
     return { success: false, message: "سفارش یافت نشد" };

@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 
+import { NextResponse } from "next/server";
 import * as v from "valibot";
 
 import { VerifyCallbackParams } from "@/features/shipping/validations";
@@ -20,10 +21,9 @@ async function handler(request: NextRequest) {
   const { success, output } = v.safeParse(VerifyCallbackParams, queryEntries);
 
   if (!success) {
-    return new Response("nok");
+    return NextResponse.redirect(new URL("/callback/invalid", request.url));
   }
 
-  //todo verify payment
   const { isOk, message } = await verifyPayment({
     gateway: output.gateway,
     url: request.url,
@@ -32,11 +32,14 @@ async function handler(request: NextRequest) {
   });
 
   if (!isOk) {
-    return new Response(`nok ${message}`);
+    return NextResponse.redirect(
+      new URL(`/callback/${output.orderId}?message=${message}`, request.url),
+    );
   }
 
-  return new Response("helo");
-  // return redirect("/callback");
+  return NextResponse.redirect(
+    new URL(`/callback/${output.orderId}`, request.url),
+  );
 }
 
 export const GET = handler;
