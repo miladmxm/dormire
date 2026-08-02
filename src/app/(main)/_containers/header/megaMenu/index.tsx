@@ -34,12 +34,14 @@ const ParentMenuItem = ({ name, id, thumbnail }: Category) => {
         className="flex size-full gap-6 py-4 px-6 items-center"
         type="button"
       >
-        <DefaultImage
-          height={40}
-          width={50}
-          image={thumbnail}
-          className="h-2/3 object-contain"
-        />
+        <div className="w-12 h-10">
+          <DefaultImage
+            height={40}
+            width={50}
+            image={thumbnail}
+            className="size-full object-contain"
+          />
+        </div>
         <strong className="font-bold text-primary-900">{name}</strong>
       </button>
       <SeparatorLine
