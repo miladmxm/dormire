@@ -8,6 +8,7 @@ import {
 
 import CheckoutStepsHandler from "../_containers/checkoutStepsHandler";
 import CheckoutContextProvider from "../_contexts";
+import InvoiceTotalSidebar from "../../_components/invoiceTotalSidebar";
 import SetShippingStoreOnMounted from "../../_components/setShippingStoreOnMounted";
 
 const CheckoutPage = async ({ params }: PageProps<"/checkout/[[...id]]">) => {
@@ -34,7 +35,12 @@ export const checkoutPageWrapper = (
 ) => {
   return (
     <Suspense>
-      <CheckoutPage {...props} />
+      <main className="container py-6">
+        <div className="grid max-w-full lg:grid-cols-[2fr_1fr] xl:grid-cols-[3fr_1fr] gap-4">
+          <CheckoutPage {...props} />
+          <InvoiceTotalSidebar />
+        </div>
+      </main>
     </Suspense>
   );
 };

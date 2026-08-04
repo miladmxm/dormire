@@ -1,7 +1,9 @@
 import { phoneNumberClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
-export const authClient = createAuthClient({ plugins: [phoneNumberClient()] });
+export const authClient = createAuthClient({
+  plugins: [phoneNumberClient()],
+});
 const ErrorMessages: Record<string, string> = {
   INVALID_PHONE_NUMBER_OR_PASSWORD: "شماره تلفن یا رمز عبور اشتباه است",
 };
