@@ -13,7 +13,7 @@ const MainLogo = ({
   if (linkedToHome) {
     return (
       <Link href="/" className={className}>
-        <Image alt="logo" src={logo} />
+        <Image loading="eager" alt="logo" src={logo} />
       </Link>
     );
   }
