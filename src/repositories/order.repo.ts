@@ -51,6 +51,7 @@ export const findUserOrderById = (
       },
     },
   });
+
 export const findPendingUserOrderById = (
   { id, userId }: { id: string; userId: string },
   tx?: Transaction,
@@ -61,26 +62,6 @@ export const findPendingUserOrderById = (
       eq(order.userId, userId),
       eq(order.status, "pending"),
     ),
-    with: {
-      address: true,
-      items: {
-        with: {
-          product: {
-            columns: { id: true, name: true, slug: true },
-            with: { thumbnail: true },
-          },
-          metadata: {
-            columns: {
-              id: true,
-              price: true,
-              stock: true,
-              discount: true,
-              optionItemIds: true,
-            },
-          },
-        },
-      },
-    },
   });
 export const findOrdersByUserId = (userId: string, tx?: Transaction) =>
   getDBorTX(tx).query.order.findMany({

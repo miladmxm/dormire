@@ -5,11 +5,12 @@ import type { PropsWithChildren } from "react";
 import { createContext, use, useMemo } from "react";
 
 import type { Cart } from "@/services/cart/type";
-import type { Address } from "@/services/shipping/type";
+import type { Address, Order } from "@/services/shipping/type";
 
 interface CheckoutContextState {
   address: Promise<Address[]>;
   cart: Promise<Cart | undefined>;
+  order?: Order;
 }
 
 const CheckoutContext = createContext<CheckoutContextState | undefined>(

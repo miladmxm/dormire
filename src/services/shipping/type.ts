@@ -49,10 +49,8 @@ export interface Order {
   addressId: string;
   status: OrderStatus;
   totalPrice: number;
-  currency: string;
   sendingMethod: SendingMethod;
   paymentGateway: PaymentGateway;
-  paymentRef: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

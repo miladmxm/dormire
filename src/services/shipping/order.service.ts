@@ -6,7 +6,7 @@ import { withTransaction } from "@/repositories";
 import * as cartRepo from "@/repositories/cart.repo";
 import * as orderRepo from "@/repositories/order.repo";
 
-import type { CreateOrder } from "./type";
+import type { CreateOrder, Order } from "./type";
 
 import { discountCalculation } from "../product/utils";
 
@@ -78,6 +78,20 @@ export const getUserOrder = async ({
 }) => {
   const order = await orderRepo.findUserOrderById({ id: orderId, userId });
 
+  return order;
+};
+
+export const getPendingUserOrder = async ({
+  orderId,
+  userId,
+}: {
+  orderId: string;
+  userId: string;
+}) => {
+  const order: Order | undefined = await orderRepo.findPendingUserOrderById({
+    id: orderId,
+    userId,
+  });
   return order;
 };
 

@@ -11,8 +11,9 @@ import RenderAddAddress from "../_components/renderAddAddress";
 import { useCheckoutContext } from "../_contexts";
 
 const CheckCartItems = () => {
-  const { cart: cartPromise } = useCheckoutContext();
+  const { cart: cartPromise, order } = useCheckoutContext();
   const cart = use(cartPromise);
+  if (order) return null;
 
   if (!cart || cart.items.length === 0) {
     redirect("/cart");

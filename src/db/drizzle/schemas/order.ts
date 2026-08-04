@@ -1,6 +1,6 @@
 import { integer, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
-import type { PaymentGateway } from "@/services/shipping/type";
+import type { PaymentGateway, SendingMethod } from "@/services/shipping/type";
 
 import { orderStatuses } from "@/services/shipping/type";
 
@@ -22,9 +22,14 @@ export const order = MainSchema.table("order", {
   status: orderStatusEnum("status").notNull().default("pending"),
   paymentGateway: varchar("payment_gateway", {
     length: 50,
-  }).$type<PaymentGateway>(),
+  })
+    .$type<PaymentGateway>()
+    .notNull(),
   totalPrice: integer("total_price").notNull().default(0),
-  sendingMethod: varchar("sending_method", { length: 50 }).notNull(),
+  sendingMethod: varchar("sending_method", { length: 50 })
+    .$type<SendingMethod>()
+    .default("storeSend")
+    .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
