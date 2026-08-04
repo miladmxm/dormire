@@ -39,6 +39,7 @@ export const getUserOrder = async (orderId: string) =>
       { order: ["read"] },
     ),
   );
+
 export const getPendingUserOrder = async (orderId: string) =>
   dalVerifySuccess(
     await dalRequireAuth(
@@ -49,6 +50,7 @@ export const getPendingUserOrder = async (orderId: string) =>
       { order: ["read"] },
     ),
   );
+
 export const getOrderSuccessPayment = async (orderId: string) =>
   dalVerifySuccess(
     await dalDbOperation(() => paymentService.getSuccessOrderPayment(orderId)),
