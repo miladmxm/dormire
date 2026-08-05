@@ -1,5 +1,7 @@
 "use client";
 
+import type { Route } from "next";
+
 import { useRouter } from "next/navigation";
 
 import SetShippingStoreOnMounted from "../../_components/setShippingStoreOnMounted";
@@ -12,7 +14,7 @@ const HandleNext = () => {
       isDisabledNextAction={false}
       step={1}
       nextStepAction={() => {
-        router.push("/checkout");
+        router.push("/checkout" as Route);
       }}
       nextButtonLabel="تکمیل فرایند خرید"
     />

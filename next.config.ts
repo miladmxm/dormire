@@ -3,10 +3,14 @@ import type { NextConfig } from "next";
 import env from "@/config/env";
 
 const nextConfig: NextConfig = {
+  distDir: process.env.NEXT_DIST_DIR ?? ".next",
   allowedDevOrigins: ["10.147.247.187"],
   typedRoutes: true,
   reactCompiler: true,
   cacheComponents: true,
+  experimental: {
+    exposeTestingApiInProductionBuild: process.env.EXPOSE_TESTING_API === "1",
+  },
   turbopack: {
     rules: {
       "*.svg": [

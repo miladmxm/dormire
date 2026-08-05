@@ -15,11 +15,18 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
+  user: {
+    deleteUser: {
+      enabled: true,
+    },
+  },
   session: {
     disableSessionRefresh: true,
   },
   emailAndPassword: {
     enabled: true,
+    minPasswordLength: 12,
+    maxPasswordLength: 256,
   },
   onAPIError: {
     throw: true,

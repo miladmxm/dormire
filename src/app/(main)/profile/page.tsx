@@ -1,78 +1,63 @@
-"use client";
+import type { Metadata } from "next";
 
-import { redirect, useRouter } from "next/navigation";
-import { useRef } from "react";
+import { Suspense } from "react";
 
-import Button from "@/components/ui/button";
-import { useSession } from "@/hooks/useSession";
-import { authClient } from "@/lib/auth-client";
+import ProfileDashboard from "@/features/profile/components/profile-dashboard";
+import ProfileSkeleton from "@/features/profile/components/profile-skeleton";
+import { getCustomerProfile } from "@/features/profile/dal/query";
 
-const LogOut = () => {
-  const router = useRouter();
+export const metadata: Metadata = {
+  title: "حساب کاربری | یاتاک مد",
+  description: "مدیریت حساب، سفارش‌ها و آدرس‌های مشتری",
+};
 
-  const signOut = () => {
-    authClient.signOut();
-    router.refresh();
-  };
+export const prefetch = "partial";
 
+const CustomerProfile = async () => {
+  const profile = await getCustomerProfile();
+
+  return <ProfileDashboard profile={profile} />;
+};
+
+const ProfilePage = () => {
   return (
-    <Button type="button" onClick={signOut}>
-      خروج
-    </Button>
+    <main className="relative isolate min-h-[75vh] overflow-hidden pb-24 pt-8 sm:pt-12">
+      <div
+        aria-hidden="true"
+        className="absolute -right-36 top-12 -z-10 size-96 rounded-full bg-thready-500/45 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -left-40 top-72 -z-10 size-80 rounded-full bg-secondary-500/10 blur-3xl"
+      />
+
+      <section className="container" data-testid="profile-shell-marker">
+        <header className="mb-7 sm:mb-10">
+          <div className="mb-3 flex items-center gap-2 text-xs font-semibold text-thready-900">
+            <span className="h-px w-8 bg-thready-800/60" />
+            حساب من
+          </div>
+          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div>
+              <h1 className="text-3xl font-black tracking-tight text-gray-900 sm:text-4xl">
+                فضای شخصی شما
+              </h1>
+              <p className="mt-2 max-w-xl text-sm leading-7 text-primary-900 sm:text-base">
+                سفارش‌ها، نشانی‌های تحویل و امنیت حساب را یک‌جا مدیریت کنید.
+              </p>
+            </div>
+            <span className="w-fit rounded-full border border-primary-300 bg-white/70 px-4 py-2 text-xs text-primary-900 shadow-blur-sm backdrop-blur">
+              خرید راحت‌تر، پیگیری سریع‌تر
+            </span>
+          </div>
+        </header>
+
+        <Suspense fallback={<ProfileSkeleton />}>
+          <CustomerProfile />
+        </Suspense>
+      </section>
+    </main>
   );
 };
 
-const ResetPass = ({ phoneNumber }: { phoneNumber: string }) => {
-  const passRef = useRef<HTMLInputElement>(null);
-
-  const reset = async () => {
-    if (passRef.current) {
-      const result = await authClient.phoneNumber.requestPasswordReset({
-        phoneNumber,
-      });
-      console.log(result);
-      // const { data, error } = await authClient.resetPassword({
-      //   newPassword: passRef.current.value,
-      // });
-      // console.log(data, error);
-    }
-  };
-
-  return (
-    <div className="flex">
-      <input className="rounded-full p-3 border" ref={passRef} />
-      <Button onClick={reset}>تغییر</Button>
-    </div>
-  );
-};
-
-const DeleteUser = () => {
-  const deleteUser = async () => {
-    const result = await authClient.deleteUser();
-    console.log(result);
-  };
-
-  return (
-    <Button type="button" onClick={deleteUser}>
-      حذف کاربر
-    </Button>
-  );
-};
-
-const Profile = () => {
-  const user = useSession();
-  if (!user.data) redirect("/");
-  return (
-    <section className="container">
-      <div className="flex flex-col gap-3 mb-4">
-        <div>{user.data.user.email}</div>
-        <div>{user.data.user.name}</div>
-      </div>
-      <LogOut />
-      <DeleteUser />
-      <ResetPass phoneNumber={user.data.user.phoneNumber || ""} />
-    </section>
-  );
-};
-
-export default Profile;
+export default ProfilePage;

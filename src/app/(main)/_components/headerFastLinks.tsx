@@ -21,7 +21,11 @@ const UserFastLinks = async () => {
     <div className="flex min-w-max gap-2 [&_svg]:size-full *:size-4 md:size-5 *:hover:text-secondary-500 text-primary-900">
       {auth?.user ? (
         <>
-          <Link href="/profile">
+          <Link
+            aria-label="حساب کاربری"
+            data-testid="profile-link"
+            href="/profile"
+          >
             <Profile />
           </Link>
           <Link href="#like">

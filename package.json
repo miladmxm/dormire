@@ -10,6 +10,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "type-check": "tsc --noEmit",
+    "test:instant": "node --env-file=.env ./node_modules/@playwright/test/cli.js test e2e/instant-profile.spec.ts",
     "next:route-type": "next typegen",
     "prepare": "husky",
     "init-s3": "npx tsx --env-file=./.env ./src/scripts/init-s3.ts",
@@ -113,6 +114,8 @@
   },
   "devDependencies": {
     "@fullstacksjs/eslint-config": "14.5.0",
+    "@next/playwright": "^16.3.0",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "4",
     "@types/jsdom": "27.0.0",
     "@types/lodash": "4.17.21",
