@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, MapPin, PencilLine, Plus, Trash2, X } from "lucide-react";
+import { Check, Plus, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -9,9 +9,10 @@ import type { CustomerProfileAddress } from "../types";
 
 import {
   createProfileAddressAction,
-  deleteProfileAddressAction,
   updateProfileAddressAction,
 } from "../actions/address";
+import AddressCard from "./addressCard";
+import EmptyAddress from "./emptyAddress";
 
 interface AddressManagerProps {
   addresses: CustomerProfileAddress[];
@@ -270,126 +271,25 @@ const AddressSectionHeader = ({ onAdd }: { onAdd: () => void }) => (
 );
 
 const AddressManager = ({ addresses }: AddressManagerProps) => {
-  const router = useRouter();
   const [editingAddress, setEditingAddress] =
     useState<CustomerProfileAddress>();
   const [showNewAddress, setShowNewAddress] = useState(false);
-  const [deletingId, setDeletingId] = useState<string>();
-  const [isPending, startTransition] = useTransition();
-
-  const deleteAddress = (address: CustomerProfileAddress) => {
-    startTransition(async () => {
-      const result = await deleteProfileAddressAction({ id: address.id });
-      setDeletingId(undefined);
-
-      if (!result.success) {
-        toast.error(result.message);
-        return;
-      }
-
-      toast.success(result.message);
-      router.refresh();
-    });
-  };
 
   return (
     <section aria-labelledby="addresses-heading">
       <AddressSectionHeader onAdd={() => setShowNewAddress(true)} />
 
       {addresses.length === 0 ? (
-        <div className="flex min-h-72 flex-col items-center justify-center rounded-4xl border border-dashed border-primary-500 bg-primary-50/70 p-7 text-center">
-          <div className="center mb-5 size-16 rounded-3xl bg-thready-500 text-thready-900">
-            <MapPin className="size-7" />
-          </div>
-          <h3 className="text-lg font-black text-gray-900">
-            هنوز نشانی ندارید
-          </h3>
-          <p className="mt-2 max-w-sm text-sm leading-7 text-primary-900">
-            اولین نشانی تحویل را ثبت کنید تا خرید بعدی سریع‌تر انجام شود.
-          </p>
-          <button
-            className="mt-5 rounded-full border border-gray-900 px-5 py-2.5 text-sm font-bold text-gray-900 transition hover:bg-gray-900 hover:text-white"
-            onClick={() => setShowNewAddress(true)}
-            type="button"
-          >
-            ثبت اولین نشانی
-          </button>
-        </div>
+        <EmptyAddress onAdd={() => setShowNewAddress(true)} />
       ) : (
         <div className="grid gap-4 xl:grid-cols-2">
           {addresses.map((address, index) => (
-            <article
-              className="group rounded-4xl border border-primary-300 bg-white p-5 transition hover:-translate-y-0.5 hover:border-thready-800/40 hover:shadow-blur-sm"
+            <AddressCard
+              onEdit={() => setEditingAddress(address)}
               key={address.id}
-            >
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="center size-10 rounded-2xl bg-thready-200 text-thready-900">
-                    <MapPin className="size-5" />
-                  </span>
-                  <div>
-                    <h3 className="font-black text-gray-900">
-                      {address.province}، {address.city}
-                    </h3>
-                    {index === 0 && (
-                      <span className="text-xs font-bold text-secondary-600">
-                        آخرین نشانی ثبت‌شده
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex gap-1">
-                  <button
-                    aria-label={`ویرایش نشانی ${address.city}`}
-                    className="center size-9 rounded-full text-primary-900 transition hover:bg-primary-200 hover:text-gray-900"
-                    onClick={() => setEditingAddress(address)}
-                    type="button"
-                  >
-                    <PencilLine className="size-4" />
-                  </button>
-                  <button
-                    aria-label={`حذف نشانی ${address.city}`}
-                    className="center size-9 rounded-full text-primary-900 transition hover:bg-red-50 hover:text-error disabled:opacity-40"
-                    disabled={isPending && deletingId === address.id}
-                    onClick={() => setDeletingId(address.id)}
-                    type="button"
-                  >
-                    <Trash2 className="size-4" />
-                  </button>
-                </div>
-              </div>
-              <p className="min-h-14 text-sm leading-7 text-primary-900">
-                {address.additionalAddress}
-              </p>
-              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-primary-200 pt-4 text-xs text-primary-900">
-                <span>{address.fullname}</span>
-                <span dir="ltr">{address.phoneNumber}</span>
-                <span dir="ltr">کد پستی: {address.postCode}</span>
-              </div>
-              {deletingId === address.id && (
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-red-50 px-4 py-3 text-xs text-red-700">
-                  <span>این نشانی حذف شود؟</span>
-                  <div className="flex gap-2">
-                    <button
-                      className="rounded-full bg-error px-4 py-1.5 font-bold text-white disabled:opacity-50"
-                      disabled={isPending}
-                      onClick={() => deleteAddress(address)}
-                      type="button"
-                    >
-                      {isPending ? "در حال حذف..." : "بله، حذف شود"}
-                    </button>
-                    <button
-                      className="rounded-full border border-red-200 px-4 py-1.5 font-bold"
-                      disabled={isPending}
-                      onClick={() => setDeletingId(undefined)}
-                      type="button"
-                    >
-                      انصراف
-                    </button>
-                  </div>
-                </div>
-              )}
-            </article>
+              {...address}
+              index={index}
+            />
           ))}
         </div>
       )}

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { Suspense } from "react";
 
-import ProfileSkeleton from "@/features/profile/components/profile-skeleton";
+import ProfileSkeleton from "@/features/profile/components/profileSkeleton";
 import CustomerProfile from "@/features/profile/containers/customerProfile";
 
 export const metadata: Metadata = {
