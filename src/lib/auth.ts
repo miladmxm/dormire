@@ -4,6 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { admin, phoneNumber } from "better-auth/plugins";
 import { headers } from "next/headers";
 
+import env from "@/config/env";
 import { db } from "@/db/drizzle/db";
 import { createFakeFrutiAndColorName } from "@/utils/faker";
 
@@ -25,7 +26,7 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
-    minPasswordLength: 12,
+    minPasswordLength: 8,
     maxPasswordLength: 256,
   },
   onAPIError: {
@@ -38,7 +39,7 @@ export const auth = betterAuth({
       },
       signUpOnVerification: {
         getTempEmail: (pn) => {
-          return `${pn}@dormire.com`;
+          return `${pn}@${env.ORIGIN_DOMAIN}`;
         },
 
         getTempName: () => {
