@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 
 import { Suspense } from "react";
 
-import ProfileDashboard from "@/features/profile/components/profile-dashboard";
 import ProfileSkeleton from "@/features/profile/components/profile-skeleton";
-import { getCustomerProfile } from "@/features/profile/dal/query";
+import CustomerProfile from "@/features/profile/containers/customerProfile";
 
 export const metadata: Metadata = {
   title: "حساب کاربری | یاتاک مد",
@@ -12,12 +11,6 @@ export const metadata: Metadata = {
 };
 
 export const prefetch = "partial";
-
-const CustomerProfile = async () => {
-  const profile = await getCustomerProfile();
-
-  return <ProfileDashboard profile={profile} />;
-};
 
 const ProfilePage = () => {
   return (

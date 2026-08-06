@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 import type { OrderStatus } from "@/services/shipping/type";
 
 export interface CustomerProfileAddress {
@@ -42,4 +44,16 @@ export interface CustomerProfileData {
   addresses: CustomerProfileAddress[];
   orders: CustomerProfileOrder[];
   cartItemCount: number;
+}
+export type ProfileTab =
+  | "account"
+  | "addresses"
+  | "orders"
+  | "overview"
+  | "security";
+
+export interface TabItem {
+  id: ProfileTab;
+  label: string;
+  icon: LucideIcon;
 }
