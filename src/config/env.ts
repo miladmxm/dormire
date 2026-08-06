@@ -10,12 +10,7 @@ const EnvSchema = v.object({
     ),
   ),
   ORIGIN: v.pipe(v.string(), v.nonEmpty(), v.url()),
-  ORIGIN_DOMAIN: v.pipe(
-    v.string(),
-    v.nonEmpty(),
-    v.url(),
-    v.transform((i) => new URL(i).hostname),
-  ),
+
   DB_URL: v.pipe(v.string(), v.nonEmpty()),
   // BETTER_AUTH_SECRET: v.pipe(v.string(), v.minLength(10), v.nonEmpty()),
   PORT: v.pipe(
@@ -44,12 +39,26 @@ const EnvSchema = v.object({
   ZARINPAL_GATEWAY_ID: v.pipe(v.string(), v.nonEmpty()),
   SAMAN_GATEWAY_ID: v.pipe(v.string(), v.nonEmpty()),
 });
-type Env = v.InferOutput<typeof EnvSchema>;
+
+const Additinal = v.object({
+  ORIGIN_DOMAIN: v.pipe(
+    v.string(),
+    v.nonEmpty(),
+    v.url(),
+    v.transform((i) => new URL(i).hostname),
+  ),
+});
+
+type Env = v.InferOutput<typeof Additinal> & v.InferOutput<typeof EnvSchema>;
 
 const ENV = (): Env => {
   try {
     const env = v.parse(EnvSchema, process.env);
-    return env;
+    const additinal = v.parse(Additinal, { ORIGIN_DOMAIN: env.ORIGIN });
+    return {
+      ...env,
+      ...additinal,
+    };
   } catch (error) {
     console.log(error);
     process.exit(1);
