@@ -21,7 +21,7 @@ const CustomerProfile = async () => {
 
 const ProfilePage = () => {
   return (
-    <main className="relative isolate min-h-[75vh] overflow-hidden pb-24 pt-8 sm:pt-12">
+    <main className="relative z-10 isolate min-h-[75vh] overflow-hidden pb-24 pt-8 sm:pt-12">
       <div
         aria-hidden="true"
         className="absolute -right-36 top-12 -z-10 size-96 rounded-full bg-thready-500/45 blur-3xl"
