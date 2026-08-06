@@ -418,9 +418,9 @@ const ProfileDashboard = ({ profile }: { profile: CustomerProfileData }) => {
       className="grid gap-5 lg:grid-cols-[260px_minmax(0,1fr)]"
       data-testid="profile-dynamic-content"
     >
-      <aside className="h-fit rounded-4xl border border-primary-300 bg-white/90 p-4 shadow-blur-sm backdrop-blur lg:sticky lg:top-5">
+      <aside className="h-fit rounded-4xl border border-primary-300 bg-white/90 p-4 shadow-blur-sm backdrop-blur lg:sticky lg:top-5 max-lg:overflow-hidden max-lg:max-w-full">
         <div className="flex items-center gap-3 border-b border-primary-200 px-1 pb-5 pt-1">
-          <div className="center size-14 shrink-0 rounded-3xl bg-gradient-to-br from-secondary-500 to-secondary-800 text-lg font-black text-white shadow-lg shadow-secondary-500/20">
+          <div className="center size-14 shrink-0 rounded-3xl bg-linear-to-br from-secondary-500 to-secondary-800 text-lg font-black text-white shadow-lg shadow-secondary-500/20">
             {getInitials(profile.user.name) || <UserRound className="size-6" />}
           </div>
           <div className="min-w-0">
@@ -435,28 +435,30 @@ const ProfileDashboard = ({ profile }: { profile: CustomerProfileData }) => {
 
         <nav
           aria-label="بخش‌های حساب کاربری"
-          className="mt-4 flex gap-2 overflow-x-auto pb-1 lg:block lg:space-y-1 lg:overflow-visible"
+          className="mt-4 overflow-x-auto pb-1 lg:overflow-visible max-w-full"
         >
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                aria-current={isActive ? "page" : undefined}
-                className={`flex shrink-0 items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold transition lg:w-full ${
-                  isActive
-                    ? "bg-gray-900 text-white shadow-lg shadow-gray-900/10"
-                    : "text-primary-900 hover:bg-primary-200 hover:text-gray-900"
-                }`}
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                type="button"
-              >
-                <Icon className="size-[18px]" />
-                {tab.label}
-              </button>
-            );
-          })}
+          <div className="flex gap-2 lg:block lg:space-y-1 w-max min-w-full">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  aria-current={isActive ? "page" : undefined}
+                  className={`flex shrink-0 items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold transition lg:w-full ${
+                    isActive
+                      ? "bg-gray-900 text-white shadow-lg shadow-gray-900/10"
+                      : "text-primary-900 hover:bg-primary-200 hover:text-gray-900"
+                  }`}
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  type="button"
+                >
+                  <Icon className="size-4.5" />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
         </nav>
 
         <div className="mt-4 hidden rounded-3xl bg-thready-200 p-4 lg:block">
@@ -470,7 +472,7 @@ const ProfileDashboard = ({ profile }: { profile: CustomerProfileData }) => {
         </div>
       </aside>
 
-      <div className="min-w-0" key={activeTab}>
+      <div className="min-w-0 max-w-full" key={activeTab}>
         {activeTab === "overview" && (
           <Overview onNavigate={setActiveTab} profile={profile} />
         )}
