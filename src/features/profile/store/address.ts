@@ -14,3 +14,9 @@ export const setShowNewAddress = (show: boolean) =>
 
 export const setEditingAddress = (editingAddressId?: string) =>
   useAddressStore.setState({ editingAddressId });
+
+export const closeAddressModal = () =>
+  useAddressStore.setState({
+    editingAddressId: undefined,
+    showNewAddress: false,
+  });
