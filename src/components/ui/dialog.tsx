@@ -31,7 +31,7 @@ const Dialog = ({
             className="inset-0 cursor-pointer backdrop-blur-xs absolute -z-10"
             onClick={onClose}
           />
-          <div className="bg-white shadow-sm-gray w-[95%] max-w-lg rounded-6xl overflow-hidden">
+          <div className="bg-white shadow-sm-gray w-[95%] max-w-lg rounded-6xl overflow-hidden max-h-[95svh] flex flex-col">
             <header className="bg-primary-50 p-6 flex items-center justify-between">
               <h5 className="font-bold md:text-lg"> {title}</h5>
               <button
