@@ -17,8 +17,14 @@ export const auth = betterAuth({
     provider: "pg",
   }),
   user: {
+    changeEmail: { enabled: true },
     deleteUser: {
       enabled: true,
+    },
+  },
+  emailVerification: {
+    sendVerificationEmail: async ({ token, url, user }) => {
+      console.log(user, token, url);
     },
   },
   session: {

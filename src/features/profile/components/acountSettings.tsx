@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 import type { CustomerProfileData } from "../types";
 
-import EditFullname from "./editFullname";
+import { EditEmail, EditFullname } from "./editProfileForms";
 
 const inputClassName =
   "w-full rounded-2xl border border-primary-300 bg-primary-25 px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-primary-600/60 focus:border-secondary-500 focus:bg-white focus:ring-4 focus:ring-secondary-500/10 disabled:cursor-not-allowed disabled:opacity-70";
@@ -62,13 +62,7 @@ const AccountSettings = ({ user }: { user: CustomerProfileData["user"] }) => {
             label="شماره موبایل"
             value={user.phoneNumber ?? "ثبت نشده"}
           />
-          <IdentityField
-            isVerified={
-              user.emailVerified && !user.email.endsWith("@dormire.com")
-            }
-            label="ایمیل"
-            value={user.email}
-          />
+          <EditEmail email={user.email} isVerified={user.emailVerified} />
         </div>
       </div>
     </section>
