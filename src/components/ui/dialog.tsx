@@ -4,6 +4,7 @@
 import type { PropsWithChildren } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 import Close from "@/assets/icons/close.svg";
@@ -18,6 +19,14 @@ const Dialog = ({
   title: string;
   isOpen: boolean;
 }>) => {
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [onClose]);
   return createPortal(
     <AnimatePresence>
       {isOpen ? (
