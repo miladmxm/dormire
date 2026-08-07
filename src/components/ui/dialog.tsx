@@ -4,6 +4,7 @@
 import type { PropsWithChildren } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
+import { createPortal } from "react-dom";
 
 import Close from "@/assets/icons/close.svg";
 
@@ -17,7 +18,7 @@ const Dialog = ({
   title: string;
   isOpen: boolean;
 }>) => {
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen ? (
         <motion.div
@@ -45,7 +46,8 @@ const Dialog = ({
           </div>
         </motion.div>
       ) : null}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 };
 
