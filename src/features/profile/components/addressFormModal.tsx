@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import Dialog from "@/components/ui/dialog";
@@ -11,6 +11,11 @@ import {
   createProfileAddressAction,
   updateProfileAddressAction,
 } from "../actions/address";
+import {
+  setEditingAddress,
+  setShowNewAddress,
+  useAddressStore,
+} from "../store/address";
 
 type FormErrors = Partial<
   Record<
@@ -79,25 +84,29 @@ const AddressFormActions = ({
 );
 
 const AddressFormModal = ({
-  address,
-  onClose,
+  addresses,
 }: {
-  address?: CustomerProfileAddress;
-  onClose: () => void;
+  addresses: CustomerProfileAddress[];
 }) => {
+  const { showNewAddress, editingAddressId } = useAddressStore();
   const router = useRouter();
+  const address = addresses.find((a) => a.id === editingAddressId);
   const [isPending, startTransition] = useTransition();
   const [errors, setErrors] = useState<FormErrors>({});
-  const isEditing = Boolean(address);
+  const isEditing = Boolean(showNewAddress || editingAddressId);
 
-  useEffect(() => {
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !isPending) onClose();
-    };
+  const onClose = () => {
+    setEditingAddress(undefined);
+    setShowNewAddress(false);
+  };
+  // useEffect(() => {
+  //   const closeOnEscape = (event: KeyboardEvent) => {
+  //     if (event.key === "Escape" && !isPending) onClose();
+  //   };
 
-    document.addEventListener("keydown", closeOnEscape);
-    return () => document.removeEventListener("keydown", closeOnEscape);
-  }, [isPending, onClose]);
+  //   document.addEventListener("keydown", closeOnEscape);
+  //   return () => document.removeEventListener("keydown", closeOnEscape);
+  // }, [isPending, onClose]);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -131,7 +140,7 @@ const AddressFormModal = ({
 
   return (
     <Dialog
-      isOpen
+      isOpen={isEditing}
       onClose={onClose}
       title={isEditing ? "ویرایش نشانی" : "نشانی جدید"}
     >

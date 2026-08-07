@@ -57,3 +57,7 @@ export interface TabItem {
   label: string;
   icon: LucideIcon;
 }
+
+export interface AddressManagerProps {
+  addresses: CustomerProfileAddress[];
+}

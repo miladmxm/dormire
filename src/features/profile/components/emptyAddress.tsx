@@ -1,6 +1,8 @@
 import { MapPin } from "lucide-react";
 
-const EmptyAddress = ({ onAdd }: { onAdd: () => void }) => {
+import { setShowNewAddress } from "../store/address";
+
+const EmptyAddress = () => {
   return (
     <div className="flex min-h-72 flex-col items-center justify-center rounded-4xl border border-dashed border-primary-500 bg-primary-50/70 p-7 text-center">
       <div className="center mb-5 size-16 rounded-3xl bg-thready-500 text-thready-900">
@@ -12,7 +14,7 @@ const EmptyAddress = ({ onAdd }: { onAdd: () => void }) => {
       </p>
       <button
         className="mt-5 rounded-full border border-gray-900 px-5 py-2.5 text-sm font-bold text-gray-900 transition hover:bg-gray-900 hover:text-white"
-        onClick={onAdd}
+        onClick={() => setShowNewAddress(true)}
         type="button"
       >
         ثبت اولین نشانی

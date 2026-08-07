@@ -6,18 +6,18 @@ import { toast } from "sonner";
 import type { CustomerProfileAddress } from "../types";
 
 import { deleteProfileAddressAction } from "../actions/address";
+import { setEditingAddress } from "../store/address";
 
 const AddressCard = ({
   city,
   province,
-  onEdit,
   index,
   additionalAddress,
   fullname,
   phoneNumber,
   postCode,
   id,
-}: CustomerProfileAddress & { index: number; onEdit: () => void }) => {
+}: CustomerProfileAddress & { index: number }) => {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string>();
   const [isPending, startTransition] = useTransition();
@@ -60,7 +60,7 @@ const AddressCard = ({
             <button
               aria-label={`ویرایش نشانی ${city}`}
               className="center size-9 rounded-full text-primary-900 transition hover:bg-primary-200 hover:text-gray-900"
-              onClick={onEdit}
+              onClick={() => setEditingAddress(id)}
               type="button"
             >
               <PencilLine className="size-4" />
