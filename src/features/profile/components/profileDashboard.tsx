@@ -12,8 +12,9 @@ import { useState } from "react";
 import type { CustomerProfileData, ProfileTab, TabItem } from "../types";
 
 import { getInitials } from "../utils";
-import { AccountSettings, SecuritySettings } from "./account-settings";
-import AddressManager from "./address-manager";
+import { SecuritySettings } from "./account-settings";
+import AccountSettings from "./acountSettings";
+import AddressManager from "./addressManager";
 import OrdersList from "./ordersList";
 import Overview from "./overview";
 
