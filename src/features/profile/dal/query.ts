@@ -24,12 +24,9 @@ export const getCustomerProfile = async (): Promise<CustomerProfileData> => {
 
         return {
           user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            emailVerified: user.emailVerified,
-            phoneNumber: user.phoneNumber ?? null,
+            ...user,
             phoneNumberVerified: Boolean(user.phoneNumberVerified),
+            phoneNumber: user.phoneNumber ?? null,
             image: user.image ?? null,
             createdAt: user.createdAt.toISOString(),
           },
