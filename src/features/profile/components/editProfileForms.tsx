@@ -14,7 +14,7 @@ import { useUpdateEmail, useUpdateFullname } from "../hooks/useUpdateProfile";
 const inputClassName =
   "w-full rounded-2xl border border-primary-300 bg-primary-25 px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-primary-600/60 focus:border-secondary-500 focus:bg-white focus:ring-4 focus:ring-secondary-500/10 disabled:cursor-not-allowed disabled:opacity-70";
 
-const IdentityField = ({
+export const IdentityField = ({
   isVerified,
   label,
   children,
@@ -26,7 +26,7 @@ const IdentityField = ({
   errors?: FieldError;
   field: ComponentProps<"input">;
 }>) => (
-  <label className="block text-sm font-bold text-gray-700">
+  <label className="text-sm font-bold text-gray-700 flex flex-col gap-2">
     {label}
     <div className="relative">
       <input
