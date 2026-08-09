@@ -7,6 +7,7 @@ import {
   dalVerifySuccess,
 } from "@/dal/helpers";
 import * as cartService from "@/services/cart/cart.service";
+import * as profileService from "@/services/profile/profile.service";
 import * as addressService from "@/services/shipping/address.service";
 import * as orderService from "@/services/shipping/order.service";
 
@@ -67,4 +68,14 @@ export const getCustomerProfile = async (): Promise<CustomerProfileData> => {
   }
 
   return dalVerifySuccess(result, { unauthorizedRedirectPath: "/" });
+};
+
+export const checkUserHavePassword = async () => {
+  const status = dalVerifySuccess(
+    await dalRequireAuth(
+      ({ id }) => dalDbOperation(() => profileService.userHavePassword(id)),
+      { profile: ["read"] },
+    ),
+  );
+  return status;
 };

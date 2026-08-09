@@ -11,3 +11,26 @@ export const UpdateEmailSchema = v.object({
     v.email("فرمت ایمیل صحیح نیست"),
   ),
 });
+
+export const NewPasswordSchema = v.pipe(
+  v.object({
+    newPassword: v.pipe(
+      v.string("این فیلد اجباری است"),
+      v.nonEmpty("نمیتواند خالی باشد"),
+      v.trim(),
+    ),
+    confirmNewPassword: v.pipe(
+      v.string("این فیلد اجباری است"),
+      v.nonEmpty("نمیتواند خالی باشد"),
+      v.trim(),
+    ),
+  }),
+  v.forward(
+    v.partialCheck(
+      [["newPassword"], ["confirmNewPassword"]],
+      (input) => input.newPassword === input.confirmNewPassword,
+      "رمز عبور و تکرار آن یکسان نیست",
+    ),
+    ["confirmNewPassword"],
+  ),
+);

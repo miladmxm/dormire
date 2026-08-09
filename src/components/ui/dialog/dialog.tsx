@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import type { PropsWithChildren } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
@@ -36,7 +35,8 @@ const Dialog = ({
           exit={{ y: 100, opacity: 0 }}
           className="fixed z-50 inset-0 center"
         >
-          <div
+          <button
+            type="button"
             className="inset-0 cursor-pointer backdrop-blur-xs absolute -z-10"
             onClick={onClose}
           />
