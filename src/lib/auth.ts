@@ -47,7 +47,6 @@ export const auth = betterAuth({
         getTempEmail: (pn) => {
           return `${pn}@${env.ORIGIN_DOMAIN}`;
         },
-
         getTempName: () => {
           return createFakeFrutiAndColorName();
         },

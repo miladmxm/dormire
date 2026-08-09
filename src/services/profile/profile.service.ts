@@ -21,7 +21,7 @@ export const setUserPasswordIfNotHave = async ({
   userId: string;
   password: string;
 }) => {
-  if (await userHavePassword(userId)) return false;
+  if (!(await userHavePassword(userId))) return false;
   const { status } = await auth.api.setUserPassword({
     body: { userId, newPassword: password },
   });

@@ -18,6 +18,8 @@ export const NewPasswordSchema = v.pipe(
       v.string("این فیلد اجباری است"),
       v.nonEmpty("نمیتواند خالی باشد"),
       v.trim(),
+      v.minLength(8, "حداقل باید ۸ کاراکتر باشد"),
+      v.maxLength(256, "حداکثر میتواند ۲۵۶ کاراکتر باشد"),
     ),
     confirmNewPassword: v.pipe(
       v.string("این فیلد اجباری است"),
@@ -34,3 +36,5 @@ export const NewPasswordSchema = v.pipe(
     ["confirmNewPassword"],
   ),
 );
+
+export type NewPasswordSchemaOutput = v.InferOutput<typeof NewPasswordSchema>;
