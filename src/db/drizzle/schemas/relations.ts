@@ -13,6 +13,7 @@ import { cart, cartItem } from "./cart";
 import { comment } from "./comment";
 import { media } from "./media";
 import { order, orderItem } from "./order";
+import { payment } from "./payment";
 import { portfolio } from "./portfolio";
 import {
   product,
@@ -317,6 +318,7 @@ export const orderRelations = relations(order, ({ many, one }) => ({
     references: [address.id],
   }),
   items: many(orderItem),
+  payments: many(payment),
 }));
 
 export const orderItemRelations = relations(orderItem, ({ one }) => ({
@@ -331,6 +333,17 @@ export const orderItemRelations = relations(orderItem, ({ one }) => ({
   metadata: one(productMeta, {
     fields: [orderItem.metadataId],
     references: [productMeta.id],
+  }),
+}));
+
+export const paymentRelations = relations(payment, ({ one }) => ({
+  order: one(order, {
+    fields: [payment.orderId],
+    references: [order.id],
+  }),
+  user: one(user, {
+    fields: [payment.userId],
+    references: [user.id],
   }),
 }));
 

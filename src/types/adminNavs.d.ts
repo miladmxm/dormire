@@ -15,6 +15,7 @@ export interface AdminNavItem {
   url: Route;
   icon: Icon;
   haveChild: boolean;
+  testId?: string;
   items?: undefined;
 }
 export type AdminNavMain = AdminNavItem | AdminNavItemWithSubMenu;

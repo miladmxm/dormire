@@ -87,12 +87,12 @@ const NavItemWithSubMenu = (item: AdminNavItemWithSubMenu) => {
 };
 
 const NavItemWithoutSubMenu = (item: AdminNavItem) => {
-  const { icon: Icon, title, url, haveChild } = item;
+  const { icon: Icon, title, url, haveChild, testId } = item;
   const isActiveRoute = useActiveRoute(url, haveChild);
   return (
     <SidebarMenuItem key={title}>
       <SidebarMenuButton asChild className="text-lg" tooltip={title}>
-        <Link href={url}>
+        <Link data-testid={testId} href={url}>
           {Icon && <Icon className={cn({ "text-primary": isActiveRoute })} />}
           <span>{title}</span>
           <NavLinkLoading />

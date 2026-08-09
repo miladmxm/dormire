@@ -1,5 +1,8 @@
+import { Suspense } from "react";
+
 import { Separator } from "@/components/dashboard/ui/separator";
 import { SidebarTrigger } from "@/components/dashboard/ui/sidebar";
+import { Skeleton } from "@/components/dashboard/ui/skeleton";
 
 import RouteBreadcrumb from "./route-breadcrumb";
 import { ModeToggle } from "./ThemeSwitch";
@@ -14,7 +17,9 @@ export function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-4"
           orientation="vertical"
         />
-        <RouteBreadcrumb />
+        <Suspense fallback={<Skeleton className="h-5 w-32" />}>
+          <RouteBreadcrumb />
+        </Suspense>
       </div>
     </header>
   );

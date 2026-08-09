@@ -79,6 +79,84 @@ export const findOrdersByUserId = (userId: string, tx?: Transaction) =>
     },
   });
 
+export const findAllOrdersForAdmin = (tx?: Transaction) =>
+  getDBorTX(tx).query.order.findMany({
+    orderBy: desc(order.createdAt),
+    with: {
+      user: {
+        columns: {
+          id: true,
+          name: true,
+          email: true,
+          phoneNumber: true,
+        },
+      },
+      address: {
+        columns: {
+          fullname: true,
+          phoneNumber: true,
+          province: true,
+          city: true,
+        },
+      },
+      items: {
+        columns: {
+          id: true,
+          quantity: true,
+        },
+        with: {
+          product: {
+            columns: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+export const findOrderForAdminById = (id: string, tx?: Transaction) =>
+  getDBorTX(tx).query.order.findFirst({
+    where: eq(order.id, id),
+    with: {
+      user: {
+        columns: {
+          id: true,
+          name: true,
+          email: true,
+          phoneNumber: true,
+        },
+      },
+      address: true,
+      items: {
+        with: {
+          product: {
+            columns: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+          metadata: {
+            columns: {
+              id: true,
+              price: true,
+              stock: true,
+              discount: true,
+              optionItemIds: true,
+            },
+          },
+        },
+      },
+      payments: {
+        limit: 1,
+        orderBy: (payments, operators) => [operators.desc(payments.createdAt)],
+      },
+    },
+  });
+
 export const updateOrderStatus = (
   { id, status }: { id: string; status: OrderStatus },
   tx?: Transaction,
@@ -87,7 +165,7 @@ export const updateOrderStatus = (
     .update(order)
     .set({ status })
     .where(eq(order.id, id))
-    .returning({ id: order.id });
+    .returning({ id: order.id, userId: order.userId });
 
 // export const updateOrderPaymentRef = (
 //   { id, paymentRef }: { id: string; paymentRef: string },

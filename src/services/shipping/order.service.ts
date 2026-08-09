@@ -105,3 +105,22 @@ export const getUserOrders = async (userId: string) => {
 
   return orderRepo.findOrdersByUserId(userId);
 };
+
+export const getAdminOrders = async () => {
+  "use cache";
+
+  cacheTag(CacheKeys.order);
+
+  return orderRepo.findAllOrdersForAdmin();
+};
+
+export const getAdminOrder = async (id: string) => {
+  "use cache";
+
+  cacheTag(CacheKeys.order, `${CacheKeys.order}-${id}`);
+
+  return orderRepo.findOrderForAdminById(id);
+};
+
+export const updateOrderStatus = (id: string, status: Order["status"]) =>
+  orderRepo.updateOrderStatus({ id, status });

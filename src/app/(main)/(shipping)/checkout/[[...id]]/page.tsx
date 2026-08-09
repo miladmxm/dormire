@@ -30,9 +30,7 @@ const CheckoutPage = async ({ params }: PageProps<"/checkout/[[...id]]">) => {
   );
 };
 
-export const checkoutPageWrapper = (
-  props: PageProps<"/checkout/[[...id]]">,
-) => {
+const checkoutPageWrapper = (props: PageProps<"/checkout/[[...id]]">) => {
   return (
     <Suspense>
       <main className="container py-6">

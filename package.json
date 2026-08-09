@@ -10,7 +10,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "type-check": "tsc --noEmit",
-    "test:instant": "node --env-file=.env ./node_modules/@playwright/test/cli.js test e2e/instant-profile.spec.ts",
+    "test:instant": "node --env-file=.env ./node_modules/@playwright/test/cli.js test e2e/instant-*.spec.ts",
     "next:route-type": "next typegen",
     "prepare": "husky",
     "init-s3": "npx tsx --env-file=./.env ./src/scripts/init-s3.ts",

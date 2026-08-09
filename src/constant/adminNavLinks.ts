@@ -11,7 +11,7 @@ import {
   IconSearch,
   IconSettings,
 } from "@tabler/icons-react";
-import { BaggageClaim, Image, MessageCircle } from "lucide-react";
+import { BaggageClaim, Image, MessageCircle, ShoppingBag } from "lucide-react";
 
 import type { AdminNavMain } from "@/types/adminNavs";
 
@@ -25,6 +25,7 @@ export const NavDictionary: Record<string, string> = {
   products: "محصولات",
   options: "ویژگی ها",
   portfolio: "نمونه کار ها",
+  orders: "سفارش‌ها",
 };
 export const navMain: AdminNavMain[] = [
   {
@@ -82,6 +83,13 @@ export const navMain: AdminNavMain[] = [
     url: "/admin/comments",
     icon: MessageCircle,
     haveChild: false,
+  },
+  {
+    title: "سفارش‌ها",
+    url: "/admin/orders",
+    icon: ShoppingBag,
+    haveChild: true,
+    testId: "orders-nav-link",
   },
   {
     haveChild: true,
