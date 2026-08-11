@@ -8,7 +8,9 @@ import { toast } from "sonner";
 import AuthFormWrapper from "@/components/ui/auth/form";
 import OTPfield from "@/components/ui/auth/OTP";
 import Button from "@/components/ui/button";
+import FormInputError from "@/components/ui/formInputError";
 import SmallTextButton from "@/components/ui/smallTextButton";
+import Spiner from "@/components/ui/spiner";
 import { authClient, getErrorMessage } from "@/lib/auth-client";
 
 import { resetAuth, setAuthStep, useAuthStore } from "../store/auth";
@@ -17,8 +19,14 @@ import ResendCode from "./resendCode";
 
 const VerifySignIn = () => {
   const phoneNumber = useAuthStore((state) => state.phoneNumber);
+  const intent = useAuthStore((state) => state.intent);
   const router = useRouter();
-  const { control, handleSubmit } = useForm({
+  const {
+    control,
+    formState: { isSubmitting },
+    handleSubmit,
+    setError,
+  } = useForm({
     resolver: valibotResolver(VerifyOTPschema),
     defaultValues: {
       code: "",
@@ -26,26 +34,47 @@ const VerifySignIn = () => {
   });
 
   const onSubmit = async ({ code }: { code: string }) => {
-    const { error } = await authClient.phoneNumber.verify({
-      phoneNumber,
-      code,
-      updatePhoneNumber: false,
-    });
+    try {
+      const { error } = await authClient.phoneNumber.verify({
+        phoneNumber,
+        code,
+        updatePhoneNumber: false,
+      });
 
-    if (error) {
-      toast.error(getErrorMessage(error));
-      return;
+      if (error) {
+        const message = getErrorMessage(error);
+        setError("code", { message });
+        toast.error(message);
+        return;
+      }
+
+      if (intent === "registration") {
+        setAuthStep("registration");
+        return;
+      }
+
+      resetAuth();
+      router.refresh();
+    } catch {
+      toast.error("تأیید کد انجام نشد؛ دوباره تلاش کنید");
     }
-
-    resetAuth();
-    router.refresh();
   };
 
   const resend = async () => {
-    const res = await authClient.phoneNumber.sendOtp({
-      phoneNumber,
-    });
-    console.log(res);
+    try {
+      const { error } = await authClient.phoneNumber.sendOtp({ phoneNumber });
+
+      if (error) {
+        toast.error(getErrorMessage(error));
+        return false;
+      }
+
+      toast.success("کد جدید ارسال شد");
+      return true;
+    } catch {
+      toast.error("ارسال دوباره کد انجام نشد");
+      return false;
+    }
   };
 
   return (
@@ -53,7 +82,12 @@ const VerifySignIn = () => {
       <Controller
         control={control}
         name="code"
-        render={({ field }) => <OTPfield {...field} />}
+        render={({ field, fieldState }) => (
+          <div className="flex flex-col gap-2">
+            <OTPfield {...field} />
+            <FormInputError error={fieldState.error} />
+          </div>
+        )}
       />
       <div className="flex justify-between">
         <SmallTextButton onClick={() => setAuthStep("phoneNumber")}>
@@ -61,9 +95,14 @@ const VerifySignIn = () => {
         </SmallTextButton>
         <ResendCode onClick={resend} />
       </div>
-      <Button variant="secondary" type="submit">
-        {" "}
-        ورود
+      <Button
+        className="flex center gap-3"
+        disabled={isSubmitting}
+        variant="secondary"
+        type="submit"
+      >
+        <span>تأیید کد</span>
+        {isSubmitting && <Spiner />}
       </Button>
     </AuthFormWrapper>
   );

@@ -1,16 +1,24 @@
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import AuthFormWrapper from "@/components/ui/auth/form";
 import PhoneNumberField from "@/components/ui/auth/phoneNumber";
 import Button from "@/components/ui/button";
 import FormInputError from "@/components/ui/formInputError";
+import Spiner from "@/components/ui/spiner";
 
-import { setAuthStep, setPhonenNumber } from "../store/auth";
+import { startPhoneAuth } from "../actions/auth";
+import { setAuthIntent, setAuthStep, setPhoneNumber } from "../store/auth";
 import { PhoneNumberSchemaObject } from "../validation/auth.schema";
 
 const PhoneNumberSignIn = () => {
-  const { control, handleSubmit } = useForm({
+  const {
+    control,
+    formState: { isSubmitting },
+    handleSubmit,
+    setError,
+  } = useForm({
     resolver: valibotResolver(PhoneNumberSchemaObject),
     defaultValues: {
       phoneNumber: "",
@@ -18,8 +26,26 @@ const PhoneNumberSignIn = () => {
   });
 
   const onSubmit = async ({ phoneNumber }: { phoneNumber: string }) => {
-    setPhonenNumber(phoneNumber);
-    setAuthStep("password");
+    try {
+      const result = await startPhoneAuth({ phoneNumber });
+
+      if (!result.success || !result.data) {
+        const message = result.errors?.phoneNumber?.[0] || result.message;
+        setError("phoneNumber", { message });
+        toast.error(message);
+        return;
+      }
+
+      setPhoneNumber(phoneNumber);
+      setAuthIntent(result.data.intent);
+      setAuthStep(result.data.nextStep);
+
+      if (result.data.nextStep === "verify") {
+        toast.success("کد تأیید ارسال شد");
+      }
+    } catch {
+      toast.error("ارتباط با سرور برقرار نشد؛ دوباره تلاش کنید");
+    }
   };
 
   return (
@@ -37,9 +63,14 @@ const PhoneNumberSignIn = () => {
           </div>
         )}
       />
-      <Button variant="secondary" type="submit">
-        {" "}
-        بعدی
+      <Button
+        className="flex center gap-3"
+        disabled={isSubmitting}
+        variant="secondary"
+        type="submit"
+      >
+        <span>ادامه</span>
+        {isSubmitting && <Spiner />}
       </Button>
     </AuthFormWrapper>
   );

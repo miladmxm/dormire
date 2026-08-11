@@ -1,7 +1,8 @@
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
-import { admin, phoneNumber } from "better-auth/plugins";
+import { admin } from "better-auth/plugins/admin";
+import { phoneNumber } from "better-auth/plugins/phone-number";
 import { headers } from "next/headers";
 
 import env from "@/config/env";
@@ -13,6 +14,7 @@ import type { Permissions } from "./permisions";
 import { ac, roles } from "./permisions";
 
 export const auth = betterAuth({
+  secret: env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
@@ -43,6 +45,10 @@ export const auth = betterAuth({
       sendOTP: ({ phoneNumber: pn, code }) => {
         console.log(pn, code);
       },
+      allowedAttempts: 3,
+      expiresIn: 2 * 60,
+      phoneNumberValidator: (pn) => /^\+989\d{9}$/.test(pn),
+      requireVerification: true,
       signUpOnVerification: {
         getTempEmail: (pn) => {
           return `${pn}@${env.ORIGIN_DOMAIN}`;

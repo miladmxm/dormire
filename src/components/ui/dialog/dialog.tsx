@@ -13,19 +13,21 @@ const Dialog = ({
   title,
   children,
   isOpen,
+  dismissible = true,
 }: PropsWithChildren<{
+  dismissible?: boolean;
   onClose: () => void;
   title: string;
   isOpen: boolean;
 }>) => {
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (dismissible && event.key === "Escape") onClose();
     };
 
     document.addEventListener("keydown", closeOnEscape);
     return () => document.removeEventListener("keydown", closeOnEscape);
-  }, [onClose]);
+  }, [dismissible, onClose]);
   return createPortal(
     <AnimatePresence>
       {isOpen ? (
@@ -36,20 +38,24 @@ const Dialog = ({
           className="fixed z-50 inset-0 center"
         >
           <button
+            aria-hidden={!dismissible}
             type="button"
-            className="inset-0 cursor-pointer backdrop-blur-xs absolute -z-10"
+            className="inset-0 cursor-pointer backdrop-blur-xs absolute -z-10 disabled:cursor-default"
+            disabled={!dismissible}
             onClick={onClose}
           />
           <div className="bg-white shadow-sm-gray w-[95%] max-w-lg rounded-6xl overflow-hidden max-h-[95svh] flex flex-col">
             <header className="bg-primary-50 p-6 flex items-center justify-between">
               <h5 className="font-bold md:text-lg"> {title}</h5>
-              <button
-                type="button"
-                className="size-3 *:size-full"
-                onClick={onClose}
-              >
-                <Close />
-              </button>
+              {dismissible && (
+                <button
+                  type="button"
+                  className="size-3 *:size-full"
+                  onClick={onClose}
+                >
+                  <Close />
+                </button>
+              )}
             </header>
             {children}
           </div>

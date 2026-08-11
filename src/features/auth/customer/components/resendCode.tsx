@@ -15,8 +15,13 @@ function formatTime(totalSeconds: number) {
 
 const DEFAULT_TIMER = 2 * 60;
 
-const ResendCode = ({ onClick }: { onClick: () => void }) => {
+const ResendCode = ({
+  onClick,
+}: {
+  onClick: () => boolean | Promise<boolean>;
+}) => {
   const [timer, setTimer] = useState<number>(DEFAULT_TIMER);
+  const [isPending, setIsPending] = useState(false);
   const timerRef = useRef<NodeJS.Timeout>(null);
   const canResend = timer === 0;
 
@@ -42,20 +47,32 @@ const ResendCode = ({ onClick }: { onClick: () => void }) => {
     };
   }, []);
 
-  const handleClick = () => {
-    if (!canResend) return;
-    onClick();
-    setTimer(DEFAULT_TIMER);
-    timerRef.current = setInterval(minusTimer, 1000);
+  const handleClick = async () => {
+    if (!canResend || isPending) return;
+
+    setIsPending(true);
+    const wasSent = await onClick();
+    setIsPending(false);
+
+    if (wasSent) {
+      setTimer(DEFAULT_TIMER);
+      timerRef.current = setInterval(minusTimer, 1000);
+    }
   };
 
   return (
     <SmallTextButton
       onClick={handleClick}
-      disabled={!canResend}
+      disabled={!canResend || isPending}
       className="me-0 ms-auto"
     >
-      {canResend ? "ارسال دوباره" : <span>{formatTime(timer)}</span>}
+      {isPending ? (
+        "در حال ارسال..."
+      ) : canResend ? (
+        "ارسال دوباره"
+      ) : (
+        <span>{formatTime(timer)}</span>
+      )}
     </SmallTextButton>
   );
 };

@@ -7,11 +7,17 @@ import { closeAuthDialog, useAuthStore } from "../store/auth";
 const DialogWrapper = ({
   title,
   children,
-}: PropsWithChildren<{ title: string }>) => {
+  forceOpen = false,
+}: PropsWithChildren<{ forceOpen?: boolean; title: string }>) => {
   const isOpen = useAuthStore((state) => state.isOpenAuthDialog);
 
   return (
-    <Dialog isOpen={isOpen} onClose={closeAuthDialog} title={title}>
+    <Dialog
+      dismissible={!forceOpen}
+      isOpen={forceOpen || isOpen}
+      onClose={closeAuthDialog}
+      title={title}
+    >
       {children}
     </Dialog>
   );

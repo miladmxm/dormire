@@ -6,8 +6,8 @@ import {
   dalRequireAuth,
   dalVerifySuccess,
 } from "@/dal/helpers";
+import * as customerAuthService from "@/services/auth/customer.service";
 import * as cartService from "@/services/cart/cart.service";
-import * as profileService from "@/services/profile/profile.service";
 import * as addressService from "@/services/shipping/address.service";
 import * as orderService from "@/services/shipping/order.service";
 
@@ -73,7 +73,7 @@ export const getCustomerProfile = async (): Promise<CustomerProfileData> => {
 export const checkUserHavePassword = async () => {
   const status = dalVerifySuccess(
     await dalRequireAuth(
-      ({ id }) => dalDbOperation(() => profileService.userHavePassword(id)),
+      ({ id }) => dalDbOperation(() => customerAuthService.userHasPassword(id)),
       { profile: ["read"] },
     ),
   );

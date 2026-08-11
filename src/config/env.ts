@@ -12,7 +12,7 @@ const EnvSchema = v.object({
   ORIGIN: v.pipe(v.string(), v.nonEmpty(), v.url()),
 
   DB_URL: v.pipe(v.string(), v.nonEmpty()),
-  // BETTER_AUTH_SECRET: v.pipe(v.string(), v.minLength(10), v.nonEmpty()),
+  BETTER_AUTH_SECRET: v.pipe(v.string(), v.nonEmpty(), v.minLength(32)),
   PORT: v.pipe(
     v.string(),
     v.nonEmpty(),
