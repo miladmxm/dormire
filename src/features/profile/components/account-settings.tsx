@@ -1,129 +1,21 @@
 "use client";
 
-import {
-  Eye,
-  EyeOff,
-  KeyRound,
-  LogOut,
-  MonitorSmartphone,
-  ShieldCheck,
-  Trash2,
-} from "lucide-react";
+import { LogOut, MonitorSmartphone, ShieldCheck, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import TextField from "@/components/ui/auth/text";
 import { authClient } from "@/lib/auth-client";
+
+import ChangePassword from "./chagePassword";
+import PasswordFieldWithLabel from "./passwordField";
 
 const inputClassName =
   "mt-2 w-full rounded-2xl border border-primary-300 bg-primary-25 px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-primary-600/60 focus:border-secondary-500 focus:bg-white focus:ring-4 focus:ring-secondary-500/10 disabled:cursor-not-allowed disabled:opacity-70";
 
 const getErrorMessage = (error: { message?: string } | null) =>
   error?.message || "در انجام عملیات مشکلی پیش آمد؛ دوباره تلاش کنید.";
-
-const PasswordInput = ({ label, name }: { label: string; name: string }) => {
-  const [visible, setVisible] = useState(false);
-
-  return (
-    <label className="block text-sm font-bold text-gray-700">
-      {label}
-      <div className="relative">
-        <input
-          autoComplete={
-            name === "currentPassword" ? "current-password" : "new-password"
-          }
-          className={`${inputClassName} pl-12`}
-          minLength={12}
-          name={name}
-          required
-          type={visible ? "text" : "password"}
-        />
-        <button
-          aria-label={visible ? "پنهان کردن رمز" : "نمایش رمز"}
-          className="center absolute left-2 top-1/2 mt-1 size-9 -translate-y-1/2 rounded-full text-primary-900 transition hover:bg-primary-200"
-          onClick={() => setVisible((current) => !current)}
-          type="button"
-        >
-          {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-        </button>
-      </div>
-    </label>
-  );
-};
-
-const PasswordCard = () => {
-  const [isPending, startTransition] = useTransition();
-
-  const changePassword = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    const currentPassword = String(formData.get("currentPassword") ?? "");
-    const newPassword = String(formData.get("newPassword") ?? "");
-    const confirmation = String(formData.get("confirmation") ?? "");
-
-    if (newPassword.length < 12) {
-      toast.error("رمز جدید باید حداقل ۱۲ کاراکتر باشد");
-      return;
-    }
-
-    if (newPassword !== confirmation) {
-      toast.error("تکرار رمز با رمز جدید یکسان نیست");
-      return;
-    }
-
-    startTransition(async () => {
-      const { error } = await authClient.changePassword({
-        currentPassword,
-        newPassword,
-        revokeOtherSessions: true,
-      });
-
-      if (error) {
-        toast.error(getErrorMessage(error));
-        return;
-      }
-
-      form.reset();
-      toast.success("رمز عبور تغییر کرد و نشست‌های دیگر بسته شدند");
-    });
-  };
-
-  return (
-    <form
-      className="rounded-4xl border border-primary-300 bg-white p-5 sm:p-7"
-      onSubmit={changePassword}
-    >
-      <div className="mb-6 flex items-center gap-4 border-b border-primary-200 pb-6">
-        <div className="center size-12 rounded-2xl bg-secondary-500/10 text-secondary-600">
-          <KeyRound className="size-5" />
-        </div>
-        <div>
-          <h3 className="font-black text-gray-900">تغییر رمز عبور</h3>
-          <p className="mt-1 text-xs leading-5 text-primary-900">
-            حداقل ۱۲ کاراکتر؛ ترجیحاً ترکیبی از حروف، عدد و نشانه‌ها.
-          </p>
-        </div>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="sm:col-span-2">
-          <PasswordInput label="رمز فعلی" name="currentPassword" />
-        </div>
-        <PasswordInput label="رمز جدید" name="newPassword" />
-        <PasswordInput label="تکرار رمز جدید" name="confirmation" />
-      </div>
-      <div className="mt-6 flex justify-end">
-        <button
-          className="rounded-full bg-secondary-500 px-7 py-3 text-sm font-bold text-white transition hover:bg-secondary-600 disabled:cursor-wait disabled:opacity-60"
-          disabled={isPending}
-          type="submit"
-        >
-          {isPending ? "در حال تغییر..." : "تغییر رمز"}
-        </button>
-      </div>
-    </form>
-  );
-};
 
 const SecurityActionCard = ({
   action,
@@ -265,15 +157,18 @@ const DeleteAccountCard = () => {
             </button>
           ) : (
             <form className="mt-5 space-y-4" onSubmit={deleteAccount}>
-              <label className="block text-sm font-bold text-gray-700">
+              <label
+                htmlFor="confirm"
+                className="block text-sm font-bold text-gray-700"
+              >
                 برای تأیید، عبارت «حذف حساب» را بنویسید
-                <input
-                  className={inputClassName}
+                <TextField
+                  id="confirm"
                   onChange={(event) => setConfirmation(event.target.value)}
                   value={confirmation}
                 />
               </label>
-              <PasswordInput label="رمز فعلی" name="deletePassword" />
+              <PasswordFieldWithLabel label="رمز فعلی" name="deletePassword" />
               <div className="flex flex-wrap gap-3">
                 <button
                   className="rounded-full bg-error px-6 py-2.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
@@ -313,7 +208,7 @@ export const SecuritySettings = () => (
     </div>
     <div className="grid grid-cols-2 gap-5 max-xl:grid-cols-1">
       <div>
-        <PasswordCard />
+        <ChangePassword />
       </div>
       <div className="flex flex-col gap-5">
         <SessionCards />
