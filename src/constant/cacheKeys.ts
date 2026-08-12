@@ -11,5 +11,5 @@ export const CacheKeys = {
   cart: "cart",
   address: "address",
   order: "order",
-  userAcount: "user_acount",
+  userAccount: "user_account",
 };

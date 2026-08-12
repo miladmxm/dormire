@@ -33,46 +33,43 @@ const ChangePassword = () => {
           control={control}
           name="oldPassword"
           render={({ field, fieldState }) => (
-            <div className="sm:col-span-2 flex flex-col gap-2">
-              <PasswordFieldWithLabel
-                showPassword={showPassword}
-                setShowPassword={toggleShowPassword}
-                label="رمز فعلی"
-                {...field}
-                autoComplete="current-password"
-              />
+            <PasswordFieldWithLabel
+              showPassword={showPassword}
+              setShowPassword={toggleShowPassword}
+              label="رمز فعلی"
+              {...field}
+              autoComplete="current-password"
+            >
               <FormInputError error={fieldState.error} />
-            </div>
+            </PasswordFieldWithLabel>
           )}
         />
         <Controller
           control={control}
           name="newPassword"
           render={({ field, fieldState }) => (
-            <div className="flex flex-col gap-2">
-              <PasswordFieldWithLabel
-                showPassword={showPassword}
-                setShowPassword={toggleShowPassword}
-                label="رمز جدید"
-                {...field}
-              />
+            <PasswordFieldWithLabel
+              showPassword={showPassword}
+              setShowPassword={toggleShowPassword}
+              label="رمز جدید"
+              {...field}
+            >
               <FormInputError error={fieldState.error} />
-            </div>
+            </PasswordFieldWithLabel>
           )}
         />
         <Controller
           control={control}
           name="confirmNewPassword"
           render={({ field, fieldState }) => (
-            <div className="flex flex-col gap-2">
-              <PasswordFieldWithLabel
-                showPassword={showPassword}
-                setShowPassword={toggleShowPassword}
-                label="تکرار رمز جدید"
-                {...field}
-              />
+            <PasswordFieldWithLabel
+              showPassword={showPassword}
+              setShowPassword={toggleShowPassword}
+              label="تکرار رمز جدید"
+              {...field}
+            >
               <FormInputError error={fieldState.error} />
-            </div>
+            </PasswordFieldWithLabel>
           )}
         />
       </div>
