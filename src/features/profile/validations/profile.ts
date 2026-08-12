@@ -38,3 +38,12 @@ export const ResetPasswordSchema = v.pipe(
     ["confirmNewPassword"],
   ),
 );
+
+export const DeleteAccountSchema = v.object({
+  deletePassword: PasswordSchema,
+  confirm: v.pipe(
+    v.string("اجباری است "),
+    v.nonEmpty("نمی‌تواند خالی باشد"),
+    v.value("حذف حساب", "عبارت نوشته شده صحیح نیست"),
+  ),
+});

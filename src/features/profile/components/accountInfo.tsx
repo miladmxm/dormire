@@ -4,33 +4,7 @@ import type { CustomerProfileData } from "../types";
 
 import { EditEmail, EditFullname, IdentityField } from "./editProfileForms";
 
-// const inputClassName =
-// "w-full rounded-2xl border border-primary-300 bg-primary-25 px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-primary-600/60 focus:border-secondary-500 focus:bg-white focus:ring-4 focus:ring-secondary-500/10 disabled:cursor-not-allowed disabled:opacity-70";
-
-// const IdentityField = ({
-//   isVerified,
-//   label,
-//   value,
-// }: {
-//   isVerified: boolean;
-//   label: string;
-//   value: string;
-// }) => (
-//   <label className="block text-sm font-bold text-gray-700">
-//     {label}
-//     <div className="relative">
-//       <input
-//         className={cn(inputClassName, "dir-ltr text-left", {
-//           "border-success": isVerified,
-//         })}
-//         disabled
-//         value={value}
-//       />
-//     </div>
-//   </label>
-// );
-
-const AccountSettings = ({ user }: { user: CustomerProfileData["user"] }) => {
+const AccountInfo = ({ user }: { user: CustomerProfileData["user"] }) => {
   return (
     <section aria-labelledby="account-heading" className="max-w-3xl">
       <div className="mb-6">
@@ -67,4 +41,4 @@ const AccountSettings = ({ user }: { user: CustomerProfileData["user"] }) => {
   );
 };
 
-export default AccountSettings;
+export default AccountInfo;

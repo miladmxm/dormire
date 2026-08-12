@@ -12,8 +12,8 @@ import { useState } from "react";
 import type { CustomerProfileData, ProfileTab, TabItem } from "../types";
 
 import { getInitials } from "../utils";
-import { SecuritySettings } from "./account-settings";
-import AccountSettings from "./acountSettings";
+import AccountInfo from "./accountInfo";
+import { SecuritySettings } from "./accountSettings";
 import AddressManager from "./addressManager";
 import OrdersList from "./ordersList";
 import Overview from "./overview";
@@ -100,7 +100,7 @@ const ProfileDashboard = ({ profile }: { profile: CustomerProfileData }) => {
         {activeTab === "addresses" && (
           <AddressManager addresses={profile.addresses} />
         )}
-        {activeTab === "account" && <AccountSettings user={profile.user} />}
+        {activeTab === "account" && <AccountInfo user={profile.user} />}
         {activeTab === "security" && <SecuritySettings />}
       </div>
     </div>
