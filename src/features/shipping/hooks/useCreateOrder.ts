@@ -1,4 +1,5 @@
 import { useTransition } from "react";
+import { toast } from "sonner";
 
 import type { CreateOrder } from "@/services/shipping/type";
 
@@ -13,7 +14,7 @@ export const useCreateOrder = () => {
       const orderResult = await createOrderAction(input);
 
       if (!orderResult.success) {
-        console.error(orderResult.message);
+        toast.error("سفارش ایجاد نشد", { description: orderResult.message });
         return;
       }
 

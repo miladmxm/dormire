@@ -14,23 +14,29 @@ export type DalError =
   | {
       type: "drizzle-error";
       error: DrizzleQueryError;
+      message?: string;
     }
   | {
       type: "fetch-error";
+      message?: string;
       status: number;
     }
   | {
       type: "no-access";
+      message?: string;
     }
   | {
       type: "no-user";
+      message?: string;
     }
   | {
       type: "not-found";
+      message?: string;
     }
   | {
       type: "unknown-error";
       error: unknown;
+      message?: string;
     }
   | { type: "validation"; message: string };
 

@@ -2,23 +2,46 @@ import { cacheTag } from "next/cache";
 import "server-only";
 
 import { CacheKeys } from "@/constant/cacheKeys";
+import { ThrowableDalError } from "@/dal/types";
 import { withTransaction } from "@/repositories";
 import * as cartRepo from "@/repositories/cart.repo";
 import * as orderRepo from "@/repositories/order.repo";
 
+import type { CartItem } from "../cart/type";
 import type { CreateOrder, Order } from "./type";
 
+import { getCart } from "../cart/cart.service";
 import { discountCalculation } from "../product/utils";
+
+const checkCartItemsStock = async (cartItems: CartItem[]) => {
+  const outOfStockItems = cartItems.filter((item) => {
+    const { stock } = item.metadata;
+    return item.quantity > stock;
+  });
+
+  if (outOfStockItems.length > 0) {
+    const outOfStockProductNames = outOfStockItems.map(
+      (item) => item.product.name,
+    );
+    throw new ThrowableDalError({
+      message: `محصولات زیر موجودی کافی ندارند: ${outOfStockProductNames.join(", ")}`,
+      type: "not-found",
+    });
+  }
+};
 
 export const createOrder = async (data: CreateOrder) => {
   const { addressId, sendingMethod, userId } = data;
-
-  const userCart =
-    await cartRepo.findCartByUserIdWithProductAndMetadata(userId);
+  const userCart = await getCart(userId);
 
   if (!userCart || userCart.items.length === 0) {
-    throw new Error("سبد خرید شما خالی است");
+    throw new ThrowableDalError({
+      message: "سبد خرید شما خالی است",
+      type: "not-found",
+    });
   }
+
+  await checkCartItemsStock(userCart.items);
 
   const orderItems = userCart.items.map((item) => {
     const unitPrice = item.metadata.price;

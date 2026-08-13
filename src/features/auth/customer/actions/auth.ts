@@ -115,7 +115,7 @@ export const completeRegistration = async (
       headers: requestHeaders,
     });
 
-    updateTag(`${CacheKeys.userAcount}-${session.user.id}`);
+    updateTag(`${CacheKeys.userAccount}-${session.user.id}`);
 
     return { success: true, message: "ثبت‌نام شما با موفقیت تکمیل شد" };
   } catch (error) {

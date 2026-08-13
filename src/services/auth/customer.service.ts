@@ -1,5 +1,5 @@
-import "server-only";
 import { cacheTag } from "next/cache";
+import "server-only";
 
 import { CacheKeys } from "@/constant/cacheKeys";
 import * as userRepo from "@/repositories/user.repo";
@@ -19,7 +19,7 @@ export const getPhoneAuthMethod = async (phoneNumber: string) => {
 export const userHasPassword = async (userId: string) => {
   "use cache";
 
-  cacheTag(`${CacheKeys.userAcount}-${userId}`);
+  cacheTag(`${CacheKeys.userAccount}-${userId}`);
 
   return Boolean(await userRepo.findCredentialAccountByUserId(userId));
 };

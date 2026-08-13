@@ -5,7 +5,7 @@ export interface CartItem {
   id: string;
   cartId: string;
   productId: string;
-  metadataId: string | null;
+  metadataId: string;
   quantity: number;
   createdAt: Date;
   product: {

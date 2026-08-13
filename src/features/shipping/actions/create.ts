@@ -81,7 +81,10 @@ export const createOrderAction = async (
     const createdOrderOutput = await dalShippingMutation.createOrder(orderData);
 
     if (!createdOrderOutput.success) {
-      return { success: false, message: "خطا در ایجاد سفارش" };
+      return {
+        success: false,
+        message: createdOrderOutput.error.message || "خطا در ایجاد سفارش",
+      };
     }
 
     updateTag(`${CacheKeys.cart}-${session.user.id}`);
