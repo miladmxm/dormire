@@ -38,5 +38,12 @@ export const createOrder = (data: Omit<CreateOrder, "userId">) =>
   dalRequireAuth(
     ({ id }) =>
       dalDbOperation(() => orderService.createOrder({ ...data, userId: id })),
-    { address: ["read"] },
+    { order: ["create"] },
+  );
+
+export const payAgaingOrder = (data: Omit<CreateOrder, "userId">) =>
+  dalRequireAuth(
+    ({ id }) =>
+      dalDbOperation(() => orderService.createOrder({ ...data, userId: id })),
+    { order: ["create"] },
   );

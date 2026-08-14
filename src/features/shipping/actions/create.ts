@@ -101,3 +101,12 @@ export const createOrderAction = async (
     return { success: false, message };
   }
 };
+
+export const createPayFromOrderAction = async (
+  orderId: string,
+  inputData: unknown,
+): Promise<ActionResult<Record<string, never>, string>> => {
+  // todo update and check order for pay
+
+  return { success: false, message: "نشد دیگه" };
+};

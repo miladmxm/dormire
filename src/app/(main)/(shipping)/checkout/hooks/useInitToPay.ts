@@ -1,11 +1,19 @@
+import { useParams } from "next/navigation";
+
 import type { PaymentGatewayKeys } from "@/constant/appData";
 
-import { useCreateOrder } from "@/features/shipping/hooks/useCreateOrder";
+import {
+  useCreateOrder,
+  usePayCreatedOrder,
+} from "@/features/shipping/hooks/useCreateOrder";
 
 import { useSetShippingState } from "../../_store";
 
 export const useInitToPay = () => {
   const { handleCreateOrder } = useCreateOrder();
+  const { id } = useParams<{ id?: string[] }>();
+  const orderId = id ? id[0] : undefined;
+  const { handlePayFromOrder } = usePayCreatedOrder(orderId);
   const setShippingState = useSetShippingState();
 
   const check = () => {
@@ -20,11 +28,19 @@ export const useInitToPay = () => {
             ? "رفتن به صفحه پرداخت"
             : "برخی موارد انتخاب نشده اند",
           nextStepAction: () => {
-            handleCreateOrder({
-              addressId,
-              paymentGateway: selectedGateway,
-              sendingMethod,
-            });
+            if (orderId) {
+              handlePayFromOrder({
+                addressId,
+                sendingMethod,
+                paymentGateway: selectedGateway,
+              });
+            } else {
+              handleCreateOrder({
+                addressId,
+                paymentGateway: selectedGateway,
+                sendingMethod,
+              });
+            }
           },
         };
       },

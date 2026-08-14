@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import type { CreateOrder } from "@/services/shipping/type";
 
-import { createOrderAction } from "../actions/create";
+import { createOrderAction, createPayFromOrderAction } from "../actions/create";
 import { initiatePaymentAction } from "../actions/payment";
 
 export const useCreateOrder = () => {
@@ -37,4 +37,31 @@ export const useCreateOrder = () => {
   };
 
   return { isPending, handleCreateOrder };
+};
+
+export const usePayCreatedOrder = (orderId?: string) => {
+  const [isPending, startTransition] = useTransition();
+
+  const handlePayFromOrder = (input: Partial<Omit<CreateOrder, "userId">>) => {
+    startTransition(async () => {
+      if (!orderId) return;
+      const payResult = await createPayFromOrderAction(orderId, input);
+
+      if (!payResult.success) {
+        toast.error("سفارش ایجاد نشد", { description: payResult.message });
+        return;
+      }
+
+      const paymentResult = await initiatePaymentAction(orderId);
+
+      if (!paymentResult.success || !paymentResult.data) {
+        console.error(paymentResult.message);
+        return;
+      }
+
+      window.location.href = paymentResult.data.url;
+    });
+  };
+
+  return { isPending, handlePayFromOrder };
 };

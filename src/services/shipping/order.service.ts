@@ -92,6 +92,55 @@ export const createOrder = async (data: CreateOrder) => {
   return orderId;
 };
 
+export const updateOrderForPayAgainOrder = async (
+  orderId: string,
+  data: Partial<CreateOrder>,
+) => {
+  // todo write this
+  // const { addressId, sendingMethod, userId } = data;
+  // const order = getOrderfop
+  // await checkCartItemsStock(userCart.items);
+  // const orderItems = userCart.items.map((item) => {
+  //   const unitPrice = item.metadata.price;
+  //   const { discount } = item.metadata;
+  //   const { quantity } = item;
+  //   const itemTotal =
+  //     discountCalculation({ price: unitPrice, discount }) * quantity;
+  //   return {
+  //     productId: item.productId,
+  //     metadataId: item.metadataId,
+  //     quantity,
+  //     unitPrice,
+  //     discount,
+  //     itemTotal,
+  //   };
+  // });
+  // const totalPrice = orderItems.reduce((sum, item) => sum + item.itemTotal, 0);
+  // const orderItemsData = orderItems.map(({ itemTotal: _, ...rest }) => rest);
+  // const orderId = await withTransaction(async (tx) => {
+  //   const [createdOrder] = await orderRepo.createOrder(
+  //     {
+  //       userId,
+  //       addressId,
+  //       totalPrice,
+  //       sendingMethod,
+  //       paymentGateway: data.paymentGateway,
+  //     },
+  //     tx,
+  //   );
+  //   await orderRepo.createOrderItems(
+  //     orderItemsData.map((item) => ({
+  //       ...item,
+  //       orderId: createdOrder.id,
+  //     })),
+  //     tx,
+  //   );
+  //   await cartRepo.deleteAllCartItems({ cartId: userCart.id, userId }, tx);
+  //   return createdOrder.id;
+  // });
+  // return orderId;
+};
+
 export const getUserOrder = async ({
   orderId,
   userId,
