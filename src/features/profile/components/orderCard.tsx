@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import type { Route } from "next";
 
 import {
   CheckCircle2,
@@ -11,6 +12,8 @@ import {
 import Link from "next/link";
 
 import type { OrderStatus } from "@/services/shipping/type";
+
+import Button from "@/components/ui/button";
 
 import type { CustomerProfileOrder } from "../types";
 
@@ -91,30 +94,40 @@ const OrderCard = ({ order }: { order: CustomerProfileOrder }) => (
         </strong>
       </div>
     </div>
-
-    {order.items.length > 0 && (
-      <div className="mt-4 flex flex-wrap gap-2 border-t border-primary-200 pt-4">
-        {order.items.slice(0, 4).map((item) => (
-          <Link
-            className="rounded-full bg-primary-50 px-3 py-1.5 text-xs text-primary-900 transition hover:bg-thready-200 hover:text-gray-900"
-            href={`/product/${item.product.slug}`}
-            key={item.id}
-          >
-            {item.product.name}
-            {item.quantity > 1 && (
-              <span className="mr-1 font-bold">
-                ×{item.quantity.toLocaleString("fa-IR")}
-              </span>
-            )}
-          </Link>
-        ))}
-        {order.items.length > 4 && (
-          <span className="rounded-full bg-primary-50 px-3 py-1.5 text-xs text-primary-900">
-            +{(order.items.length - 4).toLocaleString("fa-IR")} محصول دیگر
-          </span>
-        )}
+    <div className="flex justify-between border-t border-primary-200 pt-4 mt-4">
+      {order.items.length > 0 && (
+        <div className="flex flex-wrap gap-2 ">
+          {order.items.slice(0, 4).map((item) => (
+            <Link
+              className="rounded-full bg-primary-50 px-3 py-1.5 text-xs text-primary-900 transition hover:bg-thready-200 hover:text-gray-900"
+              href={`/product/${item.product.slug}`}
+              key={item.id}
+            >
+              {item.product.name}
+              {item.quantity > 1 && (
+                <span className="mr-1 font-bold">
+                  ×{item.quantity.toLocaleString("fa-IR")}
+                </span>
+              )}
+            </Link>
+          ))}
+          {order.items.length > 4 && (
+            <span className="rounded-full bg-primary-50 px-3 py-1.5 text-xs text-primary-900">
+              +{(order.items.length - 4).toLocaleString("fa-IR")} محصول دیگر
+            </span>
+          )}
+        </div>
+      )}
+      <div>
+        <Button
+          href={`/checkout/${order.id}` as Route}
+          variant="secondary"
+          size="sm"
+        >
+          پرداخت
+        </Button>
       </div>
-    )}
+    </div>
   </article>
 );
 export default OrderCard;

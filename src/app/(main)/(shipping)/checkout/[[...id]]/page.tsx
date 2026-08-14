@@ -13,7 +13,6 @@ import SetShippingStoreOnMounted from "../../_components/setShippingStoreOnMount
 
 const CheckoutPage = async ({ params }: PageProps<"/checkout/[[...id]]">) => {
   const { id } = await params;
-
   const userOrderForPay = id ? await getPendingUserOrder(id[0]) : undefined;
 
   const address = getUserAddress();
@@ -26,17 +25,17 @@ const CheckoutPage = async ({ params }: PageProps<"/checkout/[[...id]]">) => {
     >
       <SetShippingStoreOnMounted step={userOrderForPay ? 4 : 2} />
       <CheckoutStepsHandler />
+      <InvoiceTotalSidebar orderId={id ? id[0] : undefined} />
     </CheckoutContextProvider>
   );
 };
 
-const checkoutPageWrapper = (props: PageProps<"/checkout/[[...id]]">) => {
+const checkoutPageWrapper = async (props: PageProps<"/checkout/[[...id]]">) => {
   return (
     <Suspense>
       <main className="container py-6">
         <div className="grid max-w-full lg:grid-cols-[2fr_1fr] xl:grid-cols-[3fr_1fr] gap-4">
           <CheckoutPage {...props} />
-          <InvoiceTotalSidebar />
         </div>
       </main>
     </Suspense>

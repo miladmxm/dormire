@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, or } from "drizzle-orm";
 
 import type { OrderStatus } from "@/services/shipping/type";
 
@@ -38,15 +38,7 @@ export const findUserOrderById = (
             columns: { id: true, name: true, slug: true },
             with: { thumbnail: true },
           },
-          metadata: {
-            columns: {
-              id: true,
-              price: true,
-              stock: true,
-              discount: true,
-              optionItemIds: true,
-            },
-          },
+          metadata: true,
         },
       },
     },
@@ -60,7 +52,7 @@ export const findPendingUserOrderById = (
     where: and(
       eq(order.id, id),
       eq(order.userId, userId),
-      eq(order.status, "pending"),
+      or(eq(order.status, "pending"), eq(order.status, "paying")),
     ),
   });
 export const findOrdersByUserId = (userId: string, tx?: Transaction) =>

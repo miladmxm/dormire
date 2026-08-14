@@ -1,3 +1,6 @@
+import type { FileMeta } from "../media/type";
+import type { Product } from "../product/type";
+
 export interface Address {
   id: string;
   fullname: string;
@@ -60,4 +63,52 @@ export interface CreateOrder {
   sendingMethod: SendingMethod;
   paymentGateway: PaymentGateway;
   userId: string;
+}
+
+export interface FullOrder {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  status: "cancelled" | "delivered" | "paid" | "paying" | "pending";
+  addressId: string;
+  paymentGateway: PaymentGateway;
+  totalPrice: number;
+  sendingMethod: SendingMethod;
+  address: {
+    id: string;
+    fullname: string;
+    phoneNumber: string;
+    postCode: string;
+    province: string;
+    city: string;
+    additionalAddress: string;
+    createdAt: Date;
+    userId: string;
+  };
+  items: {
+    id: string;
+    createdAt: Date;
+    productId: string;
+    discount: number;
+    metadataId: string;
+    quantity: number;
+    orderId: string;
+    unitPrice: number;
+    metadata: Product["metadata"][number];
+    product: {
+      id: string;
+      name: string;
+      slug: string;
+      thumbnail: {
+        type: "audio" | "document" | "image" | "video";
+        url: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        size: number;
+        meta: FileMeta;
+      } | null;
+    };
+  }[];
 }
