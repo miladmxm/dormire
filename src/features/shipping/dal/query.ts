@@ -14,7 +14,7 @@ export const getUserAddress = async () =>
     await dalRequireAuth(
       ({ id }) => dalDbOperation(() => addressService.getUserAddresses(id)),
       {
-        address: ["read"],
+        address: ["public-read"],
       },
     ),
   );
@@ -24,7 +24,7 @@ export const getUserOrders = async () =>
     await dalRequireAuth(
       ({ id }) => dalDbOperation(() => orderService.getUserOrders(id)),
       {
-        order: ["read"],
+        order: ["public-read"],
       },
     ),
   );
@@ -36,7 +36,7 @@ export const getUserOrder = async (orderId: string) =>
         dalDbOperation(() =>
           orderService.getUserOrder({ orderId, userId: id }),
         ),
-      { order: ["read"] },
+      { order: ["public-read"] },
     ),
   );
 
@@ -47,7 +47,7 @@ export const getPendingUserOrder = async (orderId: string) =>
         dalDbOperation(() =>
           orderService.getPendingUserOrder({ orderId, userId: id }),
         ),
-      { order: ["read"] },
+      { order: ["public-read"] },
     ),
   );
 

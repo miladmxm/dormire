@@ -15,7 +15,7 @@ export const createAddress = (data: Omit<CreateAddress, "userId">) =>
       dalDbOperation(() =>
         addressService.createAddress({ ...data, userId: id }),
       ),
-    { address: ["create"] },
+    { address: ["public-create"] },
   );
 
 export const updateAddress = (data: Omit<Address, "createdAt">) =>
@@ -24,21 +24,21 @@ export const updateAddress = (data: Omit<Address, "createdAt">) =>
       dalDbOperation(() =>
         addressService.updateAddress({ ...data, userId: id }),
       ),
-    { address: ["update"] },
+    { address: ["public-update"] },
   );
 
 export const deleteAddress = (id: string) =>
   dalRequireAuth(
     ({ id: userId }) =>
       dalDbOperation(() => addressService.deleteAddress({ id, userId })),
-    { address: ["delete"] },
+    { address: ["public-delete"] },
   );
 
 export const createOrder = (data: Omit<CreateOrder, "userId">) =>
   dalRequireAuth(
     ({ id }) =>
       dalDbOperation(() => orderService.createOrder({ ...data, userId: id })),
-    { order: ["create"] },
+    { order: ["public-create"] },
   );
 
 export const payAgaingOrder = (
@@ -53,5 +53,5 @@ export const payAgaingOrder = (
           userId: id,
         }),
       ),
-    { order: ["create"] },
+    { order: ["public-create"] },
   );

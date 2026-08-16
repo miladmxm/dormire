@@ -54,9 +54,9 @@ export const getCustomerProfile = async (): Promise<CustomerProfileData> => {
         } satisfies CustomerProfileData;
       }),
     {
-      address: ["read"],
-      cart: ["read"],
-      order: ["read"],
+      address: ["public-read"],
+      cart: ["public-read"],
+      order: ["public-read"],
     },
   );
 
@@ -74,7 +74,7 @@ export const checkUserHavePassword = async () => {
   const status = dalVerifySuccess(
     await dalRequireAuth(
       ({ id }) => dalDbOperation(() => customerAuthService.userHasPassword(id)),
-      { profile: ["read"] },
+      { profile: ["public-read"] },
     ),
   );
   return status;

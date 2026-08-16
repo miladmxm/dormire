@@ -12,7 +12,7 @@ export const getComments = async (options?: LimitAndOffset) => {
     await dalRequireAuth(
       () => dalDbOperation(() => commentService.getAllComments(options)),
       {
-        comment: ["read"],
+        comment: ["public-read"],
       },
     ),
   );

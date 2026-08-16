@@ -10,7 +10,7 @@ export const addToCart = async (input: Omit<AddToCartPayload, "userId">) =>
   dalRequireAuth(
     ({ id }) =>
       dalDbOperation(() => cartService.addToCart({ ...input, userId: id })),
-    { cart: ["add"] },
+    { cart: ["public-add"] },
   );
 
 export const updateCartItem = async (
@@ -21,12 +21,12 @@ export const updateCartItem = async (
       dalDbOperation(() =>
         cartService.updateCartItem({ ...input, userId: id }),
       ),
-    { cart: ["add"] },
+    { cart: ["public-add"] },
   );
 
 export const removeFromCart = async (itemId: string) =>
   dalRequireAuth(
     async ({ id }) =>
       dalDbOperation(() => cartService.removeFromCart({ userId: id, itemId })),
-    { cart: ["delete"] },
+    { cart: ["public-delete"] },
   );

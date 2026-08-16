@@ -10,7 +10,7 @@ export const getUserCart = async () =>
     await dalRequireAuth(
       ({ id }) => dalDbOperation(() => cartService.getCart(id)),
       {
-        cart: ["read"],
+        cart: ["public-read"],
       },
     ),
   );
