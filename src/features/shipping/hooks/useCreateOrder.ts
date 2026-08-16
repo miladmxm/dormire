@@ -55,7 +55,9 @@ export const usePayCreatedOrder = (orderId?: string) => {
       const paymentResult = await initiatePaymentAction(orderId);
 
       if (!paymentResult.success || !paymentResult.data) {
-        console.error(paymentResult.message);
+        toast.error("در اتصال به درگاه پرداخت خطا رخ داد", {
+          description: paymentResult.message,
+        });
         return;
       }
 

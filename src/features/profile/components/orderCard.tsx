@@ -119,13 +119,15 @@ const OrderCard = ({ order }: { order: CustomerProfileOrder }) => (
         </div>
       )}
       <div>
-        <Button
-          href={`/checkout/${order.id}` as Route}
-          variant="secondary"
-          size="sm"
-        >
-          پرداخت
-        </Button>
+        {["paying", "pending"].includes(order.status) && (
+          <Button
+            href={`/checkout/${order.id}` as Route}
+            variant="secondary"
+            size="sm"
+          >
+            پرداخت
+          </Button>
+        )}
       </div>
     </div>
   </article>

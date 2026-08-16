@@ -99,7 +99,6 @@ export const createPayFromOrderAction = async (
   orderId: string,
   inputData: unknown,
 ): Promise<ActionResult<Record<string, never>, string>> => {
-  // todo update and check order for pay
   const {
     errors,
     output,
@@ -119,6 +118,7 @@ export const createPayFromOrderAction = async (
       orderId,
       output,
     );
+    console.log(createdOrderOutput);
 
     if (!createdOrderOutput.success) {
       return {

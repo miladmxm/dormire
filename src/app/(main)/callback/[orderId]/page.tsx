@@ -1,3 +1,5 @@
+import type { Route } from "next";
+
 import { Suspense } from "react";
 
 import Button from "@/components/ui/button";
@@ -11,8 +13,9 @@ const CallbackPage = async ({
   let { message } = await searchParams;
   let callbackSuccess: boolean = true;
   const { orderId } = await params;
+  const validOrderId = orderId !== "invalid";
 
-  if (orderId === "invalid") {
+  if (!validOrderId) {
     callbackSuccess = false;
     message = "موارد بازگشتی از درگاه صحیح نیست";
   }
@@ -40,11 +43,15 @@ const CallbackPage = async ({
         </h1>
         {message && <p>{message}</p>}
         {callbackSuccess ? (
-          <Button variant="secondary" className="max-w-sm">
+          <Button href="/profile" variant="secondary" className="max-w-sm">
             حساب کاربری
           </Button>
         ) : (
-          <Button variant="secondary" className="max-w-sm">
+          <Button
+            href={validOrderId ? (`/checkout/${orderId}` as Route) : "/profile"}
+            variant="secondary"
+            className="max-w-sm"
+          >
             پرداخت دوباره
           </Button>
         )}
