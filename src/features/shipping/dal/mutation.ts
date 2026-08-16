@@ -41,9 +41,17 @@ export const createOrder = (data: Omit<CreateOrder, "userId">) =>
     { order: ["create"] },
   );
 
-export const payAgaingOrder = (data: Omit<CreateOrder, "userId">) =>
+export const payAgaingOrder = (
+  orderId: string,
+  data: Partial<Omit<CreateOrder, "userId">>,
+) =>
   dalRequireAuth(
     ({ id }) =>
-      dalDbOperation(() => orderService.createOrder({ ...data, userId: id })),
+      dalDbOperation(() =>
+        orderService.updateOrderForPayAgainOrder(orderId, {
+          ...data,
+          userId: id,
+        }),
+      ),
     { order: ["create"] },
   );

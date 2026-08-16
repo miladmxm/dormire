@@ -159,12 +159,20 @@ export const updateOrderStatus = (
     .where(eq(order.id, id))
     .returning({ id: order.id, userId: order.userId });
 
-// export const updateOrderPaymentRef = (
-//   { id, paymentRef }: { id: string; paymentRef: string },
-//   tx?: Transaction,
-// ) =>
-//   getDBorTX(tx)
-//     .update(order)
-//     .set({ paymentRef })
-//     .where(eq(order.id, id))
-//     .returning({ id: order.id });
+export const updateOrderByIdAndUserId = (
+  {
+    data,
+    orderId,
+    userId,
+  }: {
+    data: Partial<typeof order.$inferInsert>;
+    orderId: string;
+    userId: string;
+  },
+  tx?: Transaction,
+) =>
+  getDBorTX(tx)
+    .update(order)
+    .set(data)
+    .where(and(eq(order.id, orderId), eq(order.userId, userId)))
+    .returning({ id: order.id });

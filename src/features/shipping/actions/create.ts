@@ -2,12 +2,7 @@
 
 import { updateTag } from "next/cache";
 
-import type {
-  CreateAddress,
-  CreateOrder,
-  PaymentGateway,
-  SendingMethod,
-} from "@/services/shipping/type";
+import type { CreateAddress } from "@/services/shipping/type";
 import type { ActionResult } from "@/types/actions";
 
 import { CacheKeys } from "@/constant/cacheKeys";
@@ -15,7 +10,11 @@ import { getSession } from "@/lib/auth";
 import { validator } from "@/validations";
 
 import * as dalShippingMutation from "../dal/mutation";
-import { AddAddressSchema, CreateOrderSchema } from "../validations";
+import {
+  AddAddressSchema,
+  CreateOrderSchema,
+  UpdateOrderSchema,
+} from "../validations";
 
 export const createAddressAction = async (
   inputData: unknown,
@@ -72,13 +71,7 @@ export const createOrderAction = async (
   }
 
   try {
-    const orderData: Omit<CreateOrder, "userId"> = {
-      addressId: output.addressId,
-      sendingMethod: output.sendingMethod as SendingMethod,
-      paymentGateway: output.paymentGateway as PaymentGateway,
-    };
-
-    const createdOrderOutput = await dalShippingMutation.createOrder(orderData);
+    const createdOrderOutput = await dalShippingMutation.createOrder(output);
 
     if (!createdOrderOutput.success) {
       return {
@@ -107,6 +100,44 @@ export const createPayFromOrderAction = async (
   inputData: unknown,
 ): Promise<ActionResult<Record<string, never>, string>> => {
   // todo update and check order for pay
+  const {
+    errors,
+    output,
+    success: successValidation,
+  } = validator(UpdateOrderSchema, inputData);
+  const session = await getSession();
 
-  return { success: false, message: "نشد دیگه" };
+  if (!session?.user?.id) {
+    return { success: false, message: "لطفا ابتدا وارد حساب خود شوید" };
+  }
+  if (!successValidation) {
+    return { success: successValidation, message: "خطای اعتبارسنجی", errors };
+  }
+
+  try {
+    const createdOrderOutput = await dalShippingMutation.payAgaingOrder(
+      orderId,
+      output,
+    );
+
+    if (!createdOrderOutput.success) {
+      return {
+        success: false,
+        message: createdOrderOutput.error.message || "خطا در ایجاد سفارش",
+      };
+    }
+
+    updateTag(`${CacheKeys.cart}-${session.user.id}`);
+    updateTag(`${CacheKeys.order}-${session.user.id}`);
+    return {
+      success: true,
+      message: "سفارش شما با موفقیت ثبت شد",
+      data: createdOrderOutput.data,
+    };
+  } catch (error) {
+    console.log(error);
+    const message =
+      error instanceof Error ? error.message : "خطا در ایجاد سفارش";
+    return { success: false, message };
+  }
 };

@@ -8,12 +8,14 @@ import * as cartRepo from "@/repositories/cart.repo";
 import * as orderRepo from "@/repositories/order.repo";
 
 import type { CartItem } from "../cart/type";
-import type { CreateOrder, Order } from "./type";
+import type { CreateOrder, FullOrder, Order } from "./type";
 
 import { getCart } from "../cart/cart.service";
 import { discountCalculation } from "../product/utils";
 
-const checkCartItemsStock = async (cartItems: CartItem[]) => {
+const checkCartItemsStock = async (
+  cartItems: CartItem[] | FullOrder["items"],
+) => {
   const outOfStockItems = cartItems.filter((item) => {
     const { stock } = item.metadata;
     return item.quantity > stock;
@@ -94,51 +96,55 @@ export const createOrder = async (data: CreateOrder) => {
 
 export const updateOrderForPayAgainOrder = async (
   orderId: string,
-  data: Partial<CreateOrder>,
+  data: Partial<CreateOrder> & { userId: string },
 ) => {
   // todo write this
-  // const { addressId, sendingMethod, userId } = data;
-  // const order = getOrderfop
-  // await checkCartItemsStock(userCart.items);
-  // const orderItems = userCart.items.map((item) => {
-  //   const unitPrice = item.metadata.price;
-  //   const { discount } = item.metadata;
-  //   const { quantity } = item;
-  //   const itemTotal =
-  //     discountCalculation({ price: unitPrice, discount }) * quantity;
-  //   return {
-  //     productId: item.productId,
-  //     metadataId: item.metadataId,
-  //     quantity,
-  //     unitPrice,
-  //     discount,
-  //     itemTotal,
-  //   };
-  // });
-  // const totalPrice = orderItems.reduce((sum, item) => sum + item.itemTotal, 0);
-  // const orderItemsData = orderItems.map(({ itemTotal: _, ...rest }) => rest);
-  // const orderId = await withTransaction(async (tx) => {
-  //   const [createdOrder] = await orderRepo.createOrder(
-  //     {
-  //       userId,
-  //       addressId,
-  //       totalPrice,
-  //       sendingMethod,
-  //       paymentGateway: data.paymentGateway,
-  //     },
-  //     tx,
-  //   );
-  //   await orderRepo.createOrderItems(
-  //     orderItemsData.map((item) => ({
-  //       ...item,
-  //       orderId: createdOrder.id,
-  //     })),
-  //     tx,
-  //   );
-  //   await cartRepo.deleteAllCartItems({ cartId: userCart.id, userId }, tx);
-  //   return createdOrder.id;
-  // });
-  // return orderId;
+  const { addressId, sendingMethod, userId } = data;
+  const order = await orderRepo.findUserOrderById({
+    id: orderId,
+    userId,
+  });
+  if (!order)
+    throw new ThrowableDalError({
+      type: "not-found",
+      message: "سفارش شما یافت نشد",
+    });
+
+  await checkCartItemsStock(order.items);
+  const orderItems = order.items.map((item) => {
+    const unitPrice = item.metadata.price;
+    const { discount } = item.metadata;
+    const { quantity } = item;
+    const itemTotal =
+      discountCalculation({ price: unitPrice, discount }) * quantity;
+    return {
+      productId: item.productId,
+      metadataId: item.metadataId,
+      quantity,
+      unitPrice,
+      discount,
+      itemTotal,
+    };
+  });
+  const totalPrice = orderItems.reduce((sum, item) => sum + item.itemTotal, 0);
+  const updatedOrderId = await withTransaction(async (tx) => {
+    const [updatedOrder] = await orderRepo.updateOrderByIdAndUserId(
+      {
+        userId,
+        orderId,
+        data: {
+          addressId,
+          totalPrice,
+          sendingMethod,
+          paymentGateway: data.paymentGateway,
+        },
+      },
+      tx,
+    );
+
+    return updatedOrder.id;
+  });
+  return updatedOrderId;
 };
 
 export const getUserOrder = async ({
