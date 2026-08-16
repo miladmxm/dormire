@@ -18,6 +18,7 @@ const checkCartItemsStock = async (
 ) => {
   const outOfStockItems = cartItems.filter((item) => {
     const { stock } = item.metadata;
+    if (stock === -1) return false;
     return item.quantity > stock;
   });
 
@@ -98,7 +99,6 @@ export const updateOrderForPayAgainOrder = async (
   orderId: string,
   data: Partial<CreateOrder> & { userId: string },
 ) => {
-  // todo write this
   const { addressId, sendingMethod, userId } = data;
   const order = await orderRepo.findUserOrderById({
     id: orderId,

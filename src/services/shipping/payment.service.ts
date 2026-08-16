@@ -113,7 +113,7 @@ export const verifyPayment = async (params: {
   const [error, result] = await payment.verify({ url, body });
 
   if (error || !result) {
-    await orderRepo.updateOrderStatus({ id: orderId, status: "cancelled" });
+    await orderRepo.updateOrderStatus({ id: orderId, status: "pending" });
     return {
       success: false as const,
       message: error?.message ?? "خطا در تأیید پرداخت",
