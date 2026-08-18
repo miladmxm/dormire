@@ -11,7 +11,13 @@ import {
   IconSearch,
   IconSettings,
 } from "@tabler/icons-react";
-import { BaggageClaim, Image, MessageCircle, ShoppingBag } from "lucide-react";
+import {
+  BaggageClaim,
+  Image,
+  MessageCircle,
+  ShoppingBag,
+  Users,
+} from "lucide-react";
 
 import type { AdminNavMain } from "@/types/adminNavs";
 
@@ -26,6 +32,7 @@ export const NavDictionary: Record<string, string> = {
   options: "ویژگی ها",
   portfolio: "نمونه کار ها",
   orders: "سفارش‌ها",
+  users: "کاربران",
 };
 export const navMain: AdminNavMain[] = [
   {
@@ -96,6 +103,12 @@ export const navMain: AdminNavMain[] = [
     title: "مدیا",
     url: "/admin/media",
     icon: Image,
+  },
+  {
+    haveChild: false,
+    title: "کاربران",
+    url: "/admin/users",
+    icon: Users,
   },
   {
     title: "نمونه کار ها",
