@@ -1,16 +1,7 @@
 import * as v from "valibot";
 
 import { toLatinNumber } from "@/utils/toLatinNumber";
-
-const PhoneNumberSchema = v.pipe(
-  v.string(),
-  v.nonEmpty("نمی‌تواند خالی باشه"),
-  v.transform((input) => toLatinNumber(input).replaceAll(/\s/g, "")),
-  v.regex(/^\d{9}$/, "شماره موبایل باید ۹ رقم بعد از ۰۹ باشد"),
-  v.transform((input) => {
-    return `+989${input}`;
-  }),
-);
+import { PhoneNumberSchema } from "@/validations/mainSchemas";
 
 export const PhoneNumberSchemaObject = v.object({
   phoneNumber: PhoneNumberSchema,

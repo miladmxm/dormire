@@ -1,5 +1,7 @@
 import * as v from "valibot";
 
+import { toLatinNumber } from "@/utils/toLatinNumber";
+
 export const ThumbnailSchema = v.optional(
   v.union([
     v.pipe(
@@ -27,4 +29,13 @@ export const ThumbnailNotNullSchema = v.union(
     v.string("انتخاب تصویر الزامی است"),
   ],
   "انتخاب یک تصویر اجباری است",
+);
+export const PhoneNumberSchema = v.pipe(
+  v.string(),
+  v.nonEmpty("نمی‌تواند خالی باشه"),
+  v.transform((input) => toLatinNumber(input).replaceAll(/\s/g, "")),
+  v.regex(/^\d{9}$/, "شماره موبایل باید ۹ رقم بعد از ۰۹ باشد"),
+  v.transform((input) => {
+    return `+989${input}`;
+  }),
 );
