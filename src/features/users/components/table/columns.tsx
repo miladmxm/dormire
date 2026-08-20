@@ -25,7 +25,7 @@ import { fullDateWithFormat } from "@/utils/fullDateWithFormat";
 import ChangeUserRole from "../changeUserRole";
 import ToggleBanUser from "../toggleBanUser";
 
-export const userColumns: ColumnDef<User>[] = [
+export const userColumns = (adminId: string): ColumnDef<User>[] => [
   {
     accessorKey: "id",
     header: "شناسه کاربر",
@@ -123,35 +123,43 @@ export const userColumns: ColumnDef<User>[] = [
       row: {
         original: { banned, id, name, role },
       },
-    }) => (
-      <DropdownMenu dir="rtl">
-        <DropdownMenuTrigger asChild>
-          <Button className="h-8 w-8 p-0" variant="ghost">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>عملیات</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          {role !== "admin" && (
+    }) => {
+      if (adminId === id) {
+        return <span>-</span>;
+      }
+
+      return (
+        <DropdownMenu dir="rtl">
+          <DropdownMenuTrigger asChild>
+            <Button className="h-8 w-8 p-0" variant="ghost">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>عملیات</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {role !== "admin" && (
+              <DropdownMenuItem asChild>
+                <ToggleBanUser banned={banned} id={id} name={name} />
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem asChild>
-              <ToggleBanUser banned={banned} id={id} name={name} />
+              <ChangeUserRole id={id} name={name} role={role} />
             </DropdownMenuItem>
-          )}
-          <DropdownMenuItem asChild>
-            <ChangeUserRole id={id} name={name} role={role} />
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];
 
-export const userColumnLabels: Partial<Record<keyof User, string>> = {
-  id: "شناسه کاربر",
-  phoneNumber: "شماره تلفن",
-  name: "نام",
-  email: "ایمیل",
-  createdAt: "تاریخ ثبت نام",
-};
+export const userColumnLabels: Partial<Record<"actions" | keyof User, string>> =
+  {
+    id: "شناسه کاربر",
+    phoneNumber: "شماره تلفن",
+    name: "نام",
+    email: "ایمیل",
+    createdAt: "تاریخ ثبت نام",
+    actions: "عملیات",
+  };

@@ -46,7 +46,7 @@ import { useDirection } from "@/hooks/useDirection";
 
 import { userColumnLabels, userColumns } from "./columns";
 
-const UserTable = ({ data }: { data: User[] }) => {
+const UserTable = ({ data, adminId }: { data: User[]; adminId: string }) => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
@@ -55,7 +55,7 @@ const UserTable = ({ data }: { data: User[] }) => {
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
-    columns: userColumns,
+    columns: userColumns(adminId),
     state: { columnFilters, columnVisibility, globalFilter },
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
