@@ -1,13 +1,17 @@
 import { headers } from "next/headers";
-
-import { auth } from "@/lib/auth";
 import "server-only";
 
+import { auth } from "@/lib/auth";
+
+import type { User } from "./type";
+
 export const getAllUsers = async () => {
-  const users = await auth.api.listUsers({
+  const { users } = await auth.api.listUsers({
     headers: await headers(),
-    query: {},
+    query: {
+      sortBy: "createdAt",
+      sortDirection: "desc",
+    },
   });
-  console.log(users);
-  return users;
+  return users as User[];
 };

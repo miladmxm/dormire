@@ -105,7 +105,7 @@ const UserTable = ({ data }: { data: User[] }) => {
                       column.toggleVisibility(Boolean(value))
                     }
                   >
-                    {userColumnLabels[column.id] ?? column.id}
+                    {userColumnLabels[column.id as keyof User] ?? column.id}
                   </DropdownMenuCheckboxItem>
                 ))}
             </DropdownMenuGroup>

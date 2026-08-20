@@ -14,6 +14,14 @@ export const BRAND_DATA = {
   },
 } as const;
 
+export const USER_ROLES = ["admin", "customer", "moderator"] as const;
+export type Role = (typeof USER_ROLES)[number];
+export const USER_ROLES_DICTIONARY: Record<Role, string> = {
+  admin: "مدیر اصلی",
+  customer: "مشتری",
+  moderator: "فروشنده",
+};
+
 export const GATEWAYS = ["zarinpal", "saman"] as const;
 export type PaymentGatewayKeys = (typeof GATEWAYS)[number];
 

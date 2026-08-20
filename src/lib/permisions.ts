@@ -1,6 +1,8 @@
 import { createAccessControl } from "better-auth/plugins/access";
 import { adminAc, defaultStatements } from "better-auth/plugins/admin/access";
 
+import type { Role } from "@/constant/appData";
+
 export const statements = {
   ...defaultStatements,
   customer: ["create", "read", "update", "delete", "ban"],
@@ -48,7 +50,7 @@ export type Permissions = {
 };
 export const ac = createAccessControl(statements);
 
-export const roles = {
+export const roles: Record<Role, ReturnType<typeof ac.newRole>> = {
   customer: ac.newRole({
     product: ["public-read"],
     blog: ["public-read"],

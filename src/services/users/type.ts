@@ -1,3 +1,5 @@
-import type { UserWithRole } from "better-auth/plugins";
+import type { UserWithPhoneNumber, UserWithRole } from "better-auth/plugins";
 
-export type User = UserWithRole;
+import type { Role } from "@/constant/appData";
+
+export type User = UserWithPhoneNumber & UserWithRole & { role: Role };
