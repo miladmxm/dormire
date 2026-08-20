@@ -1,7 +1,17 @@
 import { Controller, useFormContext } from "react-hook-form";
 
-import { Field, FieldError, FieldLabel } from "@/components/dashboard/ui/field";
-import { Input, PasswordInput } from "@/components/dashboard/ui/input";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/dashboard/ui/field";
+import {
+  Input,
+  PasswordInput,
+  PhoneNumberInput,
+} from "@/components/dashboard/ui/input";
+import { Switch } from "@/components/dashboard/ui/switch";
 
 import type { CreateUserOutput } from "../validations";
 
@@ -25,6 +35,55 @@ export const NameField = () => {
             id={field.name}
             placeholder="Arman"
           />
+          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+        </Field>
+      )}
+    />
+  );
+};
+
+export const PhoneNumberField = () => {
+  const { control } = useCreateUserFormContext();
+  return (
+    <Controller
+      name="phoneNumber"
+      control={control}
+      render={({ field, fieldState }) => (
+        <Field aria-invalid={fieldState.invalid}>
+          <FieldLabel htmlFor={field.name}>شماره تلفن</FieldLabel>
+          <PhoneNumberInput
+            prefix="09"
+            autoComplete="new-phonenumber"
+            {...field}
+            id={field.name}
+            placeholder="121582449"
+          />
+          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+        </Field>
+      )}
+    />
+  );
+};
+
+export const VerifyField = () => {
+  const { control } = useCreateUserFormContext();
+  return (
+    <Controller
+      name="verify"
+      control={control}
+      render={({ field, fieldState }) => (
+        <Field aria-invalid={fieldState.invalid}>
+          <FieldLabel htmlFor={field.name}>اعتبار سنجی</FieldLabel>
+          <div className="flex items-end justify-between">
+            <FieldDescription>آیا کاربر را معتبر شده میسازید؟</FieldDescription>
+            <Switch
+              className="dir-ltr"
+              onCheckedChange={field.onChange}
+              checked={field.value}
+              name={field.name}
+              id={field.name}
+            />
+          </div>
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>
       )}
@@ -63,7 +122,7 @@ export const PasswordField = () => {
       name="password"
       control={control}
       render={({ field, fieldState }) => (
-        <Field aria-invalid={fieldState.invalid}>
+        <Field className="w-full" aria-invalid={fieldState.invalid}>
           <FieldLabel htmlFor={field.name}>رمز عبور کاربر</FieldLabel>
           <div className="flex gap-2">
             <RandomPassword
@@ -74,7 +133,7 @@ export const PasswordField = () => {
             <PasswordInput
               {...field}
               dir="ltr"
-              className="flex-1"
+              wrapperClassName="flex-1"
               id={field.name}
               autoComplete="new-password"
             />

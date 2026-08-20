@@ -105,10 +105,14 @@ export const navMain: AdminNavMain[] = [
     icon: Image,
   },
   {
-    haveChild: false,
+    haveChild: true,
     title: "کاربران",
-    url: "/admin/users",
+    base: "/admin/users",
     icon: Users,
+    items: [
+      { title: "مشاهده همه", url: "/admin/users" },
+      { title: "افزودن", url: "/admin/users/add" },
+    ],
   },
   {
     title: "نمونه کار ها",

@@ -1,5 +1,8 @@
+"use client";
+
 import { FormProvider } from "react-hook-form";
 
+import { Button } from "@/components/dashboard/ui/button";
 import {
   Card,
   CardContent,
@@ -8,17 +11,18 @@ import {
 } from "@/components/dashboard/ui/card";
 import { FieldGroup } from "@/components/dashboard/ui/field";
 import { Spinner } from "@/components/dashboard/ui/spinner";
-import Button from "@/components/ui/button";
 
 import { useCreateUser } from "../hooks/useCreateUser";
 import {
   EmailField,
   NameField,
   PasswordField,
+  PhoneNumberField,
   RoleSelector,
+  VerifyField,
 } from "./createUserFields";
 
-const CreateUser = () => {
+const CreateUserForm = () => {
   const { form, onSubmit, isPending } = useCreateUser();
   return (
     <Card className="max-w-5xl mx-auto w-full">
@@ -37,6 +41,10 @@ const CreateUser = () => {
                 <PasswordField />
                 <RoleSelector />
               </div>
+              <div className="flex gap-4 max-md:flex-col">
+                <PhoneNumberField />
+                <VerifyField />
+              </div>
               <Button type="submit" disabled={isPending}>
                 ایجاد
                 {isPending && <Spinner />}
@@ -49,4 +57,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default CreateUserForm;

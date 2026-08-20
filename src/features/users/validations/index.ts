@@ -11,6 +11,7 @@ export const CreateUserShema = v.object({
     v.nonEmpty("نمیتواند خالی باشد"),
   ),
   phoneNumber: PhoneNumberSchema,
+  verify: v.boolean(),
   role: v.optional(v.picklist(USER_ROLES), "customer"),
 });
 

@@ -21,32 +21,42 @@ export const useCreateUser = () => {
       email: "",
       password: "",
       role: "customer",
+      phoneNumber: "",
+      verify: false,
     },
   });
 
-  const submit = async ({
+  const submit = ({
     email,
     name,
     password,
     phoneNumber,
     role,
+    verify,
   }: CreateUserOutput) => {
-    const { data, error } = await authClient.admin.createUser({
-      email,
-      name,
-      data: { phoneNumber },
-      password,
-      role,
-    });
-
-    if (data && !error) {
-      toast.success(`کاربر '${name}' با موفقیت ساخته شد`);
-      router.refresh();
-    } else {
-      toast.error("در ایجاد کاربر جدید خطایی رخ داد", {
-        description: error.message,
+    startTransition(async () => {
+      const { data, error } = await authClient.admin.createUser({
+        email,
+        name,
+        data: {
+          phoneNumber,
+          phoneNumberVerified: verify,
+          emailVerified: verify,
+        },
+        password,
+        role,
       });
-    }
+
+      if (data && !error) {
+        toast.success(`کاربر '${name}' با موفقیت ساخته شد`);
+        form.reset();
+        router.replace("/admin/users");
+      } else {
+        toast.error("در ایجاد کاربر جدید خطایی رخ داد", {
+          description: error.message,
+        });
+      }
+    });
   };
 
   return {
