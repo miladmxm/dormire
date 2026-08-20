@@ -23,6 +23,7 @@ import {
 import { fullDateWithFormat } from "@/utils/fullDateWithFormat";
 
 import ChangeUserRole from "../changeUserRole";
+import DeleteButton from "../deleteUserButton";
 import ToggleBanUser from "../toggleBanUser";
 
 export const userColumns = (adminId: string): ColumnDef<User>[] => [
@@ -146,6 +147,9 @@ export const userColumns = (adminId: string): ColumnDef<User>[] => [
             )}
             <DropdownMenuItem asChild>
               <ChangeUserRole id={id} name={name} role={role} />
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <DeleteButton id={id} name={name} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
