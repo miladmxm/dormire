@@ -14,6 +14,8 @@ import DefaultImage from "@/components/ui/defaultImage";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { fullDateNumberFormat } from "@/utils/fullDateWithFormat";
 
+import ArticleDetails from "../../_components/articleDetails";
+
 const PinArticleCard = ({
   title,
   slug,
@@ -23,7 +25,6 @@ const PinArticleCard = ({
   readingTime,
   thumbnail,
 }: Article & { pageTitle: string }) => {
-  const createdAtString = fullDateNumberFormat(createdAt);
   const articleLink = `/article/${slug}` as Route;
   return (
     <div className="relative pt-10 lg:py-10 isolate">
@@ -33,18 +34,14 @@ const PinArticleCard = ({
         <div className="h-px opacity-80 bg-primary-600 absolute -bottom-18 inset-x-0" />
       </div>
       <article className="flex items-end lg:flex-row flex-col-reverse">
-        <div className="bg-white p-4 lg:p-8 z-10 rounded-4xl lg:rounded-7xl flex flex-col gap-4 lg:w-[45%] max-lg:-translate-y-2/12 w-11/12 mx-auto">
-          <h3 className="lg:text-lg font-bold">
-            <Link href={articleLink}>{title}</Link>
-          </h3>
-          <p className="text-xs text-justify md:text-sm font-light">
-            {excerpt}
-          </p>
-          <div className="flex items-center justify-between gap-4 font-semibold text-sm">
-            <time dateTime={createdAtString}>تاریخ: {createdAtString}</time>
-            <span> زمان مطالعه: {readingTime || "چند دقیقه"}</span>
-          </div>
-        </div>
+        <ArticleDetails
+          slug={slug}
+          createdAt={createdAt}
+          excerpt={excerpt}
+          readingTime={readingTime}
+          title={title}
+          className="lg:w-[45%] max-lg:-translate-y-2/12 w-11/12 mx-auto"
+        />
         <Link href={articleLink} className="lg:w-[55%] w-full block">
           <DefaultImage
             className="rounded-4xl lg:rounded-7xl size-full lg:origin-left shadow-sm-gray lg:scale-110"
