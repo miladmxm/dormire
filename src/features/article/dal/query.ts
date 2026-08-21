@@ -54,3 +54,11 @@ export const getCategories = async () => {
 
   return categories;
 };
+
+export const getPublicArticleCategories = async () => {
+  const categories = dalVerifySuccess(
+    await dalDbOperation(articleService.getPublicCategories),
+  );
+
+  return categories;
+};

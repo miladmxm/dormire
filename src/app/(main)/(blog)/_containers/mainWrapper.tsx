@@ -46,7 +46,7 @@ const ArticleCard = ({
 
 const MainArticlesWrapper = ({ articles }: { articles: Article[] }) => {
   return (
-    <section className="flex flex-col container py-22 lg:gap-8">
+    <section className="flex flex-col lg:pb-10 container lg:gap-8">
       {articles.map((article) => (
         <ArticleCard key={article.id} {...article} />
       ))}

@@ -107,6 +107,14 @@ export const searchPublishedArticles = async (
   return normalArticles;
 };
 
+export const getPublicCategories = async () => {
+  "use cache";
+
+  cacheTag(CacheKeys.articleCategories);
+
+  return articleRepo.findMinimalCategories();
+};
+
 export const getCategoriesWithThumbnail = async () => {
   "use cache";
 

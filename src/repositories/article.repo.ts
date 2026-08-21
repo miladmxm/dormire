@@ -83,6 +83,13 @@ export const findCategoryByStartedSlugWith = async (
     where: like(articleCategory.slug, `${slug}%`),
   });
 
+export const findMinimalCategories = async (tx?: Transaction) => {
+  const categories = await getDBorTX(tx).query.articleCategory.findMany({
+    columns: { name: true, slug: true },
+  });
+  return categories;
+};
+
 export const findCategories = async (tx?: Transaction) => {
   const categories = await getDBorTX(tx).query.articleCategory.findMany({
     with: { thumbnail: { columns: { url: true, meta: true } } },
