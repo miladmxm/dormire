@@ -1,12 +1,23 @@
+import { STATIC_NAV_LINKS } from "@/constant/navLinks";
+
 import MobileMenu, { MenuItemLink } from "./mobileMenu";
+
+const StaticLinks = () => {
+  return (
+    <>
+      {STATIC_NAV_LINKS.map(({ label, link }) => (
+        <MenuItemLink key={label + link} href={link}>
+          {label}
+        </MenuItemLink>
+      ))}
+    </>
+  );
+};
 
 const HeaderMobileNavigation = () => {
   return (
     <MobileMenu>
-      <MenuItemLink href="#">پیشنهاد ویژه</MenuItemLink>
-      <MenuItemLink href="#">خرید اقساطی</MenuItemLink>
-      <MenuItemLink href="#">واقعیت افزوده</MenuItemLink>
-      <MenuItemLink href="#">تماش با ما</MenuItemLink>
+      <StaticLinks />
     </MobileMenu>
   );
 };
